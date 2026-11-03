@@ -1,0 +1,14 @@
+{
+    "name": "Anton Shavkero",
+    "short_name": "Anton Shavkero",
+    "icons": [
+        {
+            "src": "https://shavkero.com/wp-content/themes/anton-shavkero-2025/static/fav/android-chrome.png",
+            "sizes": "512x512",
+            "purpose": "any maskable"
+        }
+    ],
+    "background_color": "#010101",
+    "theme_color": "#010101",
+    "display": "fullscreen"
+}
