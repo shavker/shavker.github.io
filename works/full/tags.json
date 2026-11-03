@@ -242,7 +242,8 @@
  ],
  "832870872": [
   "3D",
-  "SPORT"
+  "SPORT",
+  "ART"
  ],
  "834782181": [
   "FILMING",
@@ -301,7 +302,8 @@
   "SPORT",
   "CLOTH",
   "PRODUCT",
-  "3D AVATARS"
+  "3D AVATARS",
+  "ART"
  ],
  "895871267": [
   "FILMING",
@@ -324,7 +326,8 @@
   "3D",
   "CLOTH",
   "PRODUCT",
-  "3D AVATARS"
+  "3D AVATARS",
+  "ART"
  ],
  "938591123": [
   "FILMING",
@@ -367,7 +370,8 @@
   "3D",
   "CYBER",
   "APPS",
-  "3D AVATARS"
+  "3D AVATARS",
+  "ART"
  ],
  "964512541": [
   "3D",
@@ -380,7 +384,8 @@
   "3D",
   "CYBER",
   "APPS",
-  "3D AVATARS"
+  "3D AVATARS",
+  "ART"
  ],
  "967029875": [
   "FILMING",
@@ -421,7 +426,8 @@
   "CLOTH",
   "PRODUCT",
   "APPS",
-  "3D AVATARS"
+  "3D AVATARS",
+  "ART"
  ],
  "1053077345": [
   "FILMING",
@@ -449,7 +455,8 @@
   "APPS",
   "CYBER",
   "UE",
-  "3D"
+  "3D",
+  "ART"
  ],
  "1097529610": [
   "3D",
@@ -458,14 +465,16 @@
   "SPORT",
   "CLOTH",
   "PRODUCT",
-  "3D AVATARS"
+  "3D AVATARS",
+  "ART"
  ],
  "1119164836": [
   "3D",
   "UE",
   "COMEDY",
   "SPORT",
-  "APPS"
+  "APPS",
+  "ART"
  ],
  "1119165658": [
   "3D",
@@ -548,7 +557,8 @@
   "FILMING",
   "ACTORS",
   "3D",
-  "APPS"
+  "APPS",
+  "ART"
  ],
  "1174347318": [
   "ACTORS",
@@ -569,19 +579,22 @@
   "3D",
   "SPORT",
   "CLOTH",
-  "PRODUCT"
+  "PRODUCT",
+  "ART"
  ],
  "1207044383": [
   "3D",
   "SPORT",
   "CLOTH",
-  "PRODUCT"
+  "PRODUCT",
+  "ART"
  ],
  "1214692081": [
   "3D",
   "SPORT",
   "CLOTH",
-  "PRODUCT"
+  "PRODUCT",
+  "ART"
  ],
  "1235409365": [
   "AI",
