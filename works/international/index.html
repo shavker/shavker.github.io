@@ -1,0 +1,6 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Anton Shavkero — International</title>
+<script>
+/* /works/international = страница /works/full, отфильтрованная по /works/full/intl.json (фильтр внутри самой страницы). */
+(function(){var x=new XMLHttpRequest();x.open('GET','/works/full/?x='+Date.now(),false);x.send(null);
+if(x.status===200){document.open();document.write(x.responseText);document.close();}else{location.replace('/works/full/');}})();
+</script></head><body></body></html>

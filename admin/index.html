@@ -36,6 +36,8 @@ button:hover{color:#fff;border-color:#777}
 .bt{display:flex;gap:3px;padding:0 6px 6px;opacity:.35}.card:hover .bt{opacity:1}
 .bt button{flex:1;padding:2px 0;font-size:11px;letter-spacing:0}
 #size{accent-color:var(--y)}
+#ig{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;padding:14px 16px}
+#ig .card{cursor:pointer;opacity:.35}#ig .card.on{opacity:1;border-color:var(--y)}#ig .card .ck{position:absolute;top:5px;right:5px;background:#000;color:#555;font-size:11px;font-weight:700;padding:1px 6px;border-radius:2px;pointer-events:none}#ig .card.on .ck{background:var(--y);color:#000}
 .login{max-width:320px;margin:18vh auto;display:flex;flex-direction:column;gap:10px;padding:0 16px}
 .login input{background:#111;border:1px solid #333;color:#fff;border-radius:3px;padding:10px;font:inherit}
 .login .e{color:#ff5a5a;font-size:12px}
@@ -45,7 +47,7 @@ button:hover{color:#fff;border-color:#777}
 <div id="app" class="hide">
 <header>
   <h1>shavkero.com</h1>
-  <div class="tabs"><button class="tab" data-t="tags">Категории</button><button class="tab" data-t="order">Порядок</button></div>
+  <div class="tabs"><button class="tab" data-t="tags">Категории</button><button class="tab" data-t="order">Порядок</button><button class="tab" data-t="intl">International</button></div>
   <input id="q" placeholder="поиск…">
   <label id="szl" style="color:#777;font-size:12px">размер <input id="size" type="range" min="90" max="320" value="150"></label>
   <span id="st">загрузка…</span>
@@ -54,17 +56,18 @@ button:hover{color:#fff;border-color:#777}
 <div id="hint"></div>
 <div id="tags"></div>
 <div id="grid" class="hide"></div>
+<div id="ig" class="hide"></div>
 <script>
 var API='https://stats.clan.team/shavkero/api.php',TK='shk_admin_token';
 function tok(){try{return localStorage.getItem(TK)||'';}catch(e){return '';}}
 function api(q,body){return fetch(API+(q||''),{method:body?'POST':'GET',headers:Object.assign({'Authorization':'Bearer '+tok()},body?{'Content-Type':'application/json'}:{}),body:body?JSON.stringify(body):undefined}).then(function(r){if(r.status===401){needLogin();throw 0;}return r.json();});}
-var W={},CATS=[],tags={},order=[],tab='tags';
+var W={},CATS=[],tags={},order=[],intl=[],tab='tags';
 var $=function(s){return document.querySelector(s);};
-var HINT={tags:'Нажимай на категории — сохраняется сразу. На сайте через ~1 минуту (обнови страницу).',order:'Перетаскивай карточки (левая половина — встанет перед, правая — после) или ⇡ ← → ⇣. Сохраняется сразу, на сайте через ~1 минуту.'};
+var HINT={tags:'Нажимай на категории — сохраняется сразу. На сайте через ~1 минуту (обнови страницу).',intl:'Отметь работы для shavkero.com/works/international (яркие — на странице). Порядок — как во вкладке «Порядок». Сохраняется сразу.',order:'Перетаскивай карточки (левая половина — встанет перед, правая — после) или ⇡ ← → ⇣. Сохраняется сразу, на сайте через ~1 минуту.'};
 function st(t,c){var e=$('#st');e.textContent=t;e.className=c||'';}
 var timers={},inflight=0;
 function save(kind){clearTimeout(timers[kind]);st('сохраняю…','wait');timers[kind]=setTimeout(function(){
-  inflight++;api('',{kind:kind,data:kind==='tags'?tags:order}).then(function(d){inflight--;if(!d.ok)throw 0;st('сохранено · публикую…','wait');poll();})
+  inflight++;api('',{kind:kind,data:kind==='tags'?tags:kind==='intl'?intl:order}).then(function(d){inflight--;if(!d.ok)throw 0;st('сохранено · публикую…','wait');poll();})
   .catch(function(e){inflight--;if(e!==0)st('ошибка сохранения','err');});},600);}
 var pt;function poll(){clearTimeout(pt);pt=setTimeout(function(){api('?status=1').then(function(s){
   if(s.pending||inflight){st('публикую…','wait');poll();}else{st('✓ отправлено на сайт '+new Date().toLocaleTimeString().slice(0,5)+' · появится через ~1 мин');}});},2500);}
@@ -94,23 +97,30 @@ G.addEventListener('drop',function(e){var r=e.target.closest('.card');if(!r||!dr
 function ls(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v);}catch(e){}}
 var sz=$('#size');function setSize(v){G.style.gridTemplateColumns='repeat(auto-fill,minmax('+v+'px,1fr))';ls('shk_admin_size',v);}
 if(ls('shk_admin_size'))sz.value=ls('shk_admin_size');setSize(sz.value);sz.addEventListener('input',function(){setSize(this.value);});
+function renderIntl(){var q=($('#q').value||'').toLowerCase(),I=$('#ig');I.innerHTML='';var on={};intl.forEach(function(i){on[i]=1;});
+  order.forEach(function(id){var w=W[id];if(!w)return;if(q&&w.t.toLowerCase().indexOf(q)<0&&id.indexOf(q)<0)return;
+    var r=document.createElement('div');r.className='card'+(on[id]?' on':'');r.dataset.id=id;r.title=w.t+' · '+id;
+    r.innerHTML='<img class="th" loading="lazy" src="'+w.p+'" alt><span class="ck">'+(on[id]?'✓ INTL':'—')+'</span><span class="ti">'+w.t+'</span>';I.appendChild(r);});
+  $('#hint').textContent=HINT.intl+' Отмечено: '+intl.length+'.';}
+$('#ig').addEventListener('click',function(e){var c=e.target.closest('.card');if(!c)return;var id=c.dataset.id,i=intl.indexOf(id);
+  if(i>-1){if(intl.length===1)return;intl.splice(i,1);}else intl.push(id);renderIntl();save('intl');});
 function show(t){tab=t;ls('shk_admin_tab',t);document.querySelectorAll('.tab').forEach(function(b){b.classList.toggle('on',b.dataset.t===t);});
-  $('#tags').classList.toggle('hide',t!=='tags');$('#grid').classList.toggle('hide',t!=='order');$('#szl').classList.toggle('hide',t!=='order');$('#hint').textContent=HINT[t];
-  t==='tags'?renderTags():renderGrid();}
+  $('#tags').classList.toggle('hide',t!=='tags');$('#grid').classList.toggle('hide',t!=='order');$('#ig').classList.toggle('hide',t!=='intl');$('#szl').classList.toggle('hide',t!=='order');$('#hint').textContent=HINT[t];
+  t==='tags'?renderTags():t==='intl'?renderIntl():renderGrid();}
 document.querySelectorAll('.tab').forEach(function(b){b.addEventListener('click',function(){show(b.dataset.t);});});
-$('#q').addEventListener('input',function(){tab==='tags'?renderTags():renderGrid();});
+$('#q').addEventListener('input',function(){tab==='tags'?renderTags():tab==='intl'?renderIntl():renderGrid();});
 function boot(){$('#login').classList.add('hide');$('#app').classList.remove('hide');api('').then(function(d){
-  d.works.forEach(function(w){W[w.id]=w;});CATS=d.cats;tags=Array.isArray(d.tags)?{}:d.tags;
+  d.works.forEach(function(w){W[w.id]=w;});CATS=d.cats;tags=Array.isArray(d.tags)?{}:d.tags;intl=(d.intl||[]).filter(function(i){return W[i];});
   var seen={};order=(d.order||[]).filter(function(id){if(W[id]&&!seen[id]){seen[id]=1;return true;}});
   d.works.forEach(function(w){if(!seen[w.id])order.unshift(w.id);});
   st(d.status.pending?'публикую…':'✓ всё на сайте',d.status.pending?'wait':'');if(d.status.pending)poll();
-  show(location.hash==='#order'?'order':location.hash==='#tags'?'tags':(ls('shk_admin_tab')||'tags'));
+  show(location.hash==='#order'?'order':location.hash==='#tags'?'tags':location.hash==='#intl'?'intl':(ls('shk_admin_tab')||'tags'));
 }).catch(function(e){if(e!==0)st('не загрузилось','err');});}
 function needLogin(){try{localStorage.removeItem(TK);}catch(e){}$('#app').classList.add('hide');$('#login').classList.remove('hide');$('#pw').focus();}
 $('#login').addEventListener('submit',function(e){e.preventDefault();$('#perr').textContent='';fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({login:$('#pw').value})}).then(function(r){return r.json();}).then(function(d){if(!d.token){$('#perr').textContent='Неверный пароль';return;}try{localStorage.setItem(TK,d.token);}catch(x){}boot();}).catch(function(){$('#perr').textContent='Нет связи с сервером';});});
 $('#logout').addEventListener('click',function(e){e.preventDefault();needLogin();});
 tok()?boot():needLogin();
-window.addEventListener('hashchange',function(){if(location.hash==='#order'||location.hash==='#tags')show(location.hash.slice(1));});
+window.addEventListener('hashchange',function(){if(['#order','#tags','#intl'].indexOf(location.hash)>-1)show(location.hash.slice(1));});
 window.addEventListener('beforeunload',function(e){if(inflight||Object.keys(timers).some(function(k){return timers[k];})&&$('#st').textContent==='сохраняю…'){e.preventDefault();e.returnValue='';}});
 </script>
 </div>
