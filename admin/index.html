@@ -1,0 +1,117 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>shavkero.com — админка работ</title>
+<style>
+:root{--y:#e5ff00}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#000;color:#fff;font:14px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;-webkit-font-smoothing:antialiased}
+a{color:#777;text-decoration:none}a:hover{color:#fff}
+header{position:sticky;top:0;z-index:5;background:#000;border-bottom:1px solid #222;padding:12px 16px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+h1{font-size:15px;letter-spacing:.04em;text-transform:uppercase;font-weight:700}
+.tabs{display:flex;gap:4px;margin-right:auto}
+.tab{cursor:pointer;background:transparent;color:#888;border:1px solid #333;border-radius:3px;padding:7px 12px;font:inherit;text-transform:uppercase;letter-spacing:.04em;font-weight:700}
+.tab.on{background:var(--y);color:#000;border-color:var(--y)}
+#q{background:#111;border:1px solid #333;color:#fff;border-radius:3px;padding:7px 10px;font:inherit;min-width:170px}
+#st{font-size:12px;color:#777;white-space:nowrap}#st.wait{color:var(--y)}#st.err{color:#ff5a5a}
+.links{font-size:12px;display:flex;gap:12px}
+button{cursor:pointer;background:transparent;color:#aaa;border:1px solid #444;border-radius:3px;padding:7px 11px;font:inherit;text-transform:uppercase;letter-spacing:.04em}
+button:hover{color:#fff;border-color:#777}
+#hint{padding:10px 16px;color:#666;font-size:12px;border-bottom:1px solid #161616}
+/* категории */
+.row{display:grid;grid-template-columns:76px 1fr;gap:12px;align-items:center;padding:12px 16px;border-bottom:1px solid #161616}
+.row:hover{background:#0b0b0b}
+.row .th{width:76px;height:44px;object-fit:cover;background:#111;border-radius:2px;display:block}
+.meta{display:flex;flex-direction:column;gap:7px;min-width:0}
+.ti{font-weight:700;font-size:14px;letter-spacing:.02em;display:flex;gap:8px;align-items:baseline}
+.id{color:#555;font-size:11px}
+.chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip{cursor:pointer;border:1px solid #333;color:#777;border-radius:2px;padding:4px 7px;font-size:11px;letter-spacing:.04em;text-transform:uppercase;user-select:none}
+.chip.on{background:var(--y);color:#000;border-color:var(--y);font-weight:700}
+/* порядок */
+#grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;padding:14px 16px}
+.card{position:relative;background:#0b0b0b;border:1px solid #1c1c1c;border-radius:4px;overflow:hidden;cursor:grab;user-select:none}
+.card:hover{border-color:#444}.card.drag{opacity:.3}
+.card.over-l{box-shadow:inset 3px 0 0 var(--y)}.card.over-r{box-shadow:inset -3px 0 0 var(--y)}
+.card .th{width:100%;aspect-ratio:16/9;object-fit:cover;background:#111;display:block;pointer-events:none}
+.n{position:absolute;top:5px;left:5px;background:rgba(0,0,0,.75);color:var(--y);font-size:11px;font-weight:700;padding:1px 6px;border-radius:2px;pointer-events:none}
+.card .ti{font-size:11px;padding:6px 7px 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;pointer-events:none}
+.bt{display:flex;gap:3px;padding:0 6px 6px;opacity:.35}.card:hover .bt{opacity:1}
+.bt button{flex:1;padding:2px 0;font-size:11px;letter-spacing:0}
+#size{accent-color:var(--y)}
+.login{max-width:320px;margin:18vh auto;display:flex;flex-direction:column;gap:10px;padding:0 16px}
+.login input{background:#111;border:1px solid #333;color:#fff;border-radius:3px;padding:10px;font:inherit}
+.login .e{color:#ff5a5a;font-size:12px}
+.hide{display:none!important}
+</style></head><body>
+<form class="login hide" id="login"><h1>shavkero.com — работы</h1><input type="password" id="pw" placeholder="Пароль" autofocus autocomplete="current-password"><div class="e" id="perr"></div><button type="submit">Войти</button></form>
+<div id="app" class="hide">
+<header>
+  <h1>shavkero.com</h1>
+  <div class="tabs"><button class="tab" data-t="tags">Категории</button><button class="tab" data-t="order">Порядок</button></div>
+  <input id="q" placeholder="поиск…">
+  <label id="szl" style="color:#777;font-size:12px">размер <input id="size" type="range" min="90" max="320" value="150"></label>
+  <span id="st">загрузка…</span>
+  <span class="links"><a href="/works/full/" target="_blank">сайт ↗</a><a href="#" id="logout">выйти</a></span>
+</header>
+<div id="hint"></div>
+<div id="tags"></div>
+<div id="grid" class="hide"></div>
+<script>
+var API='https://stats.clan.team/shavkero/api.php',TK='shk_admin_token';
+function tok(){try{return localStorage.getItem(TK)||'';}catch(e){return '';}}
+function api(q,body){return fetch(API+(q||''),{method:body?'POST':'GET',headers:Object.assign({'Authorization':'Bearer '+tok()},body?{'Content-Type':'application/json'}:{}),body:body?JSON.stringify(body):undefined}).then(function(r){if(r.status===401){needLogin();throw 0;}return r.json();});}
+var W={},CATS=[],tags={},order=[],tab='tags';
+var $=function(s){return document.querySelector(s);};
+var HINT={tags:'Нажимай на категории — сохраняется сразу. На сайте через ~1 минуту (обнови страницу).',order:'Перетаскивай карточки (левая половина — встанет перед, правая — после) или ⇡ ← → ⇣. Сохраняется сразу, на сайте через ~1 минуту.'};
+function st(t,c){var e=$('#st');e.textContent=t;e.className=c||'';}
+var timers={},inflight=0;
+function save(kind){clearTimeout(timers[kind]);st('сохраняю…','wait');timers[kind]=setTimeout(function(){
+  inflight++;api('',{kind:kind,data:kind==='tags'?tags:order}).then(function(d){inflight--;if(!d.ok)throw 0;st('сохранено · публикую…','wait');poll();})
+  .catch(function(e){inflight--;if(e!==0)st('ошибка сохранения','err');});},600);}
+var pt;function poll(){clearTimeout(pt);pt=setTimeout(function(){api('?status=1').then(function(s){
+  if(s.pending||inflight){st('публикую…','wait');poll();}else{st('✓ отправлено на сайт '+new Date().toLocaleTimeString().slice(0,5)+' · появится через ~1 мин');}});},2500);}
+function renderTags(){var q=($('#q').value||'').toLowerCase(),L=$('#tags');L.innerHTML='';
+  order.forEach(function(id){var w=W[id];if(!w)return;if(q&&w.t.toLowerCase().indexOf(q)<0&&id.indexOf(q)<0)return;
+    var cur=tags[id]||[];var r=document.createElement('div');r.className='row';
+    r.innerHTML='<img class="th" loading="lazy" src="'+w.p+'" alt><div class="meta"><div class="ti">'+w.t+' <span class="id">'+id+'</span></div><div class="chips" data-id="'+id+'">'+
+      CATS.map(function(c){return '<span class="chip'+(cur.indexOf(c)>-1?' on':'')+'" data-c="'+c+'">'+c+'</span>';}).join('')+'</div></div>';L.appendChild(r);});}
+$('#tags').addEventListener('click',function(e){var c=e.target.closest('.chip');if(!c)return;var id=c.parentElement.dataset.id,k=c.dataset.c;
+  var a=tags[id]||(tags[id]=[]),i=a.indexOf(k);if(i>-1){a.splice(i,1);c.classList.remove('on');}else{a.push(k);c.classList.add('on');}if(!a.length)delete tags[id];save('tags');});
+function renderGrid(){var q=($('#q').value||'').toLowerCase(),G=$('#grid');G.innerHTML='';
+  order.forEach(function(id,i){var w=W[id];if(!w)return;if(q&&w.t.toLowerCase().indexOf(q)<0&&id.indexOf(q)<0)return;
+    var r=document.createElement('div');r.className='card';r.draggable=!q;r.dataset.id=id;r.title=w.t+' · '+id;
+    r.innerHTML='<img class="th" loading="lazy" src="'+w.p+'" alt draggable="false"><span class="n">'+(i+1)+'</span><span class="ti">'+w.t+'</span>'+
+      '<div class="bt"><button data-a="top" title="в начало">⇡</button><button data-a="up" title="назад">←</button><button data-a="down" title="вперёд">→</button><button data-a="end" title="в конец">⇣</button></div>';G.appendChild(r);});}
+function move(id,to){var i=order.indexOf(id);order.splice(i,1);to=Math.max(0,Math.min(order.length,to));order.splice(to,0,id);renderGrid();save('order');}
+var G=$('#grid'),dragId=null;
+G.addEventListener('click',function(e){var b=e.target.closest('button[data-a]');if(!b)return;var id=b.closest('.card').dataset.id,i=order.indexOf(id),a=b.dataset.a;
+  move(id,a==='top'?0:a==='end'?order.length:a==='up'?i-1:i+1);});
+function clr(){document.querySelectorAll('.over-l,.over-r').forEach(function(x){x.classList.remove('over-l','over-r');});}
+function side(r,e){var b=r.getBoundingClientRect();return e.clientX>b.left+b.width/2?'r':'l';}
+G.addEventListener('dragstart',function(e){var r=e.target.closest('.card');if(!r)return;dragId=r.dataset.id;r.classList.add('drag');e.dataTransfer.effectAllowed='move';try{e.dataTransfer.setData('text/plain',dragId);}catch(x){}});
+G.addEventListener('dragend',function(e){var r=e.target.closest('.card');if(r)r.classList.remove('drag');clr();});
+G.addEventListener('dragover',function(e){var r=e.target.closest('.card');if(!r||!dragId)return;e.preventDefault();clr();if(r.dataset.id!==dragId)r.classList.add('over-'+side(r,e));});
+G.addEventListener('drop',function(e){var r=e.target.closest('.card');if(!r||!dragId||r.dataset.id===dragId){clr();return;}e.preventDefault();
+  var id=dragId,after=side(r,e)==='r';dragId=null;clr();order.splice(order.indexOf(id),1);order.splice(order.indexOf(r.dataset.id)+(after?1:0),0,id);renderGrid();save('order');});
+function ls(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v);}catch(e){}}
+var sz=$('#size');function setSize(v){G.style.gridTemplateColumns='repeat(auto-fill,minmax('+v+'px,1fr))';ls('shk_admin_size',v);}
+if(ls('shk_admin_size'))sz.value=ls('shk_admin_size');setSize(sz.value);sz.addEventListener('input',function(){setSize(this.value);});
+function show(t){tab=t;ls('shk_admin_tab',t);document.querySelectorAll('.tab').forEach(function(b){b.classList.toggle('on',b.dataset.t===t);});
+  $('#tags').classList.toggle('hide',t!=='tags');$('#grid').classList.toggle('hide',t!=='order');$('#szl').classList.toggle('hide',t!=='order');$('#hint').textContent=HINT[t];
+  t==='tags'?renderTags():renderGrid();}
+document.querySelectorAll('.tab').forEach(function(b){b.addEventListener('click',function(){show(b.dataset.t);});});
+$('#q').addEventListener('input',function(){tab==='tags'?renderTags():renderGrid();});
+function boot(){$('#login').classList.add('hide');$('#app').classList.remove('hide');api('').then(function(d){
+  d.works.forEach(function(w){W[w.id]=w;});CATS=d.cats;tags=Array.isArray(d.tags)?{}:d.tags;
+  var seen={};order=(d.order||[]).filter(function(id){if(W[id]&&!seen[id]){seen[id]=1;return true;}});
+  d.works.forEach(function(w){if(!seen[w.id])order.unshift(w.id);});
+  st(d.status.pending?'публикую…':'✓ всё на сайте',d.status.pending?'wait':'');if(d.status.pending)poll();
+  show(location.hash==='#order'?'order':location.hash==='#tags'?'tags':(ls('shk_admin_tab')||'tags'));
+}).catch(function(e){if(e!==0)st('не загрузилось','err');});}
+function needLogin(){try{localStorage.removeItem(TK);}catch(e){}$('#app').classList.add('hide');$('#login').classList.remove('hide');$('#pw').focus();}
+$('#login').addEventListener('submit',function(e){e.preventDefault();$('#perr').textContent='';fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({login:$('#pw').value})}).then(function(r){return r.json();}).then(function(d){if(!d.token){$('#perr').textContent='Неверный пароль';return;}try{localStorage.setItem(TK,d.token);}catch(x){}boot();}).catch(function(){$('#perr').textContent='Нет связи с сервером';});});
+$('#logout').addEventListener('click',function(e){e.preventDefault();needLogin();});
+tok()?boot():needLogin();
+window.addEventListener('hashchange',function(){if(location.hash==='#order'||location.hash==='#tags')show(location.hash.slice(1));});
+window.addEventListener('beforeunload',function(e){if(inflight||Object.keys(timers).some(function(k){return timers[k];})&&$('#st').textContent==='сохраняю…'){e.preventDefault();e.returnValue='';}});
+</script>
+</div>
+</body></html>
