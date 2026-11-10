@@ -13,27 +13,29 @@ button{cursor:pointer;background:transparent;color:#aaa;border:1px solid #444;bo
 button.pri{background:var(--y);color:#000;border-color:var(--y);font-weight:700}
 button:hover{color:#fff;border-color:#777}button.pri:hover{color:#000}
 #hint{padding:12px 16px;color:#777;font-size:12px;border-bottom:1px solid #161616}
-.row{display:grid;grid-template-columns:28px 34px 76px 1fr auto;gap:12px;align-items:center;padding:8px 16px;border-bottom:1px solid #161616;background:#000}
-.row:hover{background:#0b0b0b}
-.row.drag{opacity:.35}
-.row.over{box-shadow:inset 0 2px 0 var(--y)}
-.row.moved{background:#14160a}
-.h{cursor:grab;color:#555;font-size:18px;text-align:center;user-select:none}
-.n{color:#555;font-size:12px;text-align:right}
-.th{width:76px;height:44px;object-fit:cover;background:#111;border-radius:2px;display:block}
-.ti{font-weight:700;letter-spacing:.02em;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.ti .id{color:#555;font-size:11px;font-weight:400;margin-left:8px}
-.bt{display:flex;gap:4px}
-.bt button{padding:4px 7px;font-size:11px}
+#list{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;padding:14px 16px}
+.row{position:relative;background:#0b0b0b;border:1px solid #1c1c1c;border-radius:4px;overflow:hidden;cursor:grab;user-select:none}
+.row:hover{border-color:#444}
+.row.drag{opacity:.3}
+.row.over-l{box-shadow:inset 3px 0 0 var(--y)}
+.row.over-r{box-shadow:inset -3px 0 0 var(--y)}
+.row.moved{border-color:#5d6a00}
+.th{width:100%;aspect-ratio:16/9;object-fit:cover;background:#111;display:block;pointer-events:none}
+.n{position:absolute;top:5px;left:5px;background:rgba(0,0,0,.75);color:var(--y);font-size:11px;font-weight:700;padding:1px 6px;border-radius:2px;pointer-events:none}
+.ti{font-size:11px;font-weight:700;letter-spacing:.02em;padding:6px 7px 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none}
+.bt{display:flex;gap:3px;padding:0 6px 6px;opacity:.35}
+.row:hover .bt{opacity:1}
+.bt button{flex:1;padding:2px 0;font-size:11px;letter-spacing:0}
+#size{accent-color:var(--y)}
 #toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--y);color:#000;font-weight:700;padding:9px 16px;border-radius:4px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:9}
 </style></head><body>
 <header>
   <h1>Порядок работ <a href="admin.html">← категории</a> <a href="./" target="_blank">открыть /works/full ↗</a></h1>
-  <input id="q" placeholder="поиск по названию…">
+  <input id="q" placeholder="поиск по названию…"><label style="color:#777;font-size:12px">размер <input id="size" type="range" min="90" max="320" value="150"></label>
   <button id="reset">Сбросить к текущему на сайте</button>
   <button id="dl" class="pri">Скачать order.json</button>
 </header>
-<div id="hint">Перетаскивай строки за «⋮⋮» или жми ⇡ наверх / ⇣ в конец / ↑ ↓. Сохраняется автоматически в этом браузере. Как закончишь — «Скачать order.json» и пришли мне файл: порядок на /works/full поменяется у всех. Новые видео, которых нет в файле, появляются сверху.</div>
+<div id="hint">Перетаскивай карточки мышкой (бросил на левую половину — встанет перед, на правую — после) или жми ⇡ наверх / ⇣ в конец / ← → на одну позицию. Сохраняется автоматически в этом браузере. Как закончишь — «Скачать order.json» и пришли мне файл: порядок на /works/full поменяется у всех. Новые видео, которых нет в файле, появляются сверху.</div>
 <div id="list"></div>
 <div id="toast"></div>
 <script>
@@ -51,10 +53,10 @@ function render(){
   order.forEach(function(id,i){
     var w=works[id];
     if(q&&w.t.toLowerCase().indexOf(q)<0&&id.indexOf(q)<0)return;
-    var r=document.createElement('div');r.className='row'+(site.indexOf(id)!==i?' moved':'');r.draggable=!q;r.dataset.id=id;
-    r.innerHTML='<span class="h" title="перетащить">⋮⋮</span><span class="n">'+(i+1)+'</span><img class="th" loading="lazy" src="'+(w.p||'')+'" alt>'+
-      '<div class="ti">'+w.t+'<span class="id">'+id+'</span></div>'+
-      '<div class="bt"><button data-a="top" title="наверх">⇡</button><button data-a="up">↑</button><button data-a="down">↓</button><button data-a="end" title="в конец">⇣</button></div>';
+    var r=document.createElement('div');r.className='row'+(site.indexOf(id)!==i?' moved':'');r.draggable=!q;r.dataset.id=id;r.title=w.t+' · '+id;
+    r.innerHTML='<img class="th" loading="lazy" src="'+(w.p||'')+'" alt draggable="false"><span class="n">'+(i+1)+'</span>'+
+      '<div class="ti">'+w.t+'</div>'+
+      '<div class="bt"><button data-a="top" title="в начало">⇡</button><button data-a="up" title="на одну назад">←</button><button data-a="down" title="на одну вперёд">→</button><button data-a="end" title="в конец">⇣</button></div>';
     list.appendChild(r);
   });
 }
@@ -65,13 +67,21 @@ document.getElementById('list').addEventListener('click',function(e){
   move(id,a==='top'?0:a==='end'?order.length:a==='up'?i-1:i+1);
 });
 var dragId=null;
-document.getElementById('list').addEventListener('dragstart',function(e){var r=e.target.closest('.row');if(!r)return;dragId=r.dataset.id;r.classList.add('drag');e.dataTransfer.effectAllowed='move';});
-document.getElementById('list').addEventListener('dragend',function(e){var r=e.target.closest('.row');if(r)r.classList.remove('drag');document.querySelectorAll('.over').forEach(function(x){x.classList.remove('over');});});
-document.getElementById('list').addEventListener('dragover',function(e){var r=e.target.closest('.row');if(!r||!dragId)return;e.preventDefault();document.querySelectorAll('.over').forEach(function(x){x.classList.remove('over');});r.classList.add('over');});
-document.getElementById('list').addEventListener('drop',function(e){
-  var r=e.target.closest('.row');if(!r||!dragId||r.dataset.id===dragId)return;e.preventDefault();
-  var id=dragId;dragId=null;order.splice(order.indexOf(id),1);order.splice(order.indexOf(r.dataset.id),0,id);save();render();
+function clr(){document.querySelectorAll('.over-l,.over-r').forEach(function(x){x.classList.remove('over-l','over-r');});}
+function side(r,e){var b=r.getBoundingClientRect();return e.clientX>b.left+b.width/2?'r':'l';}
+var L=document.getElementById('list');
+L.addEventListener('dragstart',function(e){var r=e.target.closest('.row');if(!r)return;dragId=r.dataset.id;r.classList.add('drag');e.dataTransfer.effectAllowed='move';try{e.dataTransfer.setData('text/plain',dragId);}catch(x){}});
+L.addEventListener('dragend',function(e){var r=e.target.closest('.row');if(r)r.classList.remove('drag');clr();});
+L.addEventListener('dragover',function(e){var r=e.target.closest('.row');if(!r||!dragId)return;e.preventDefault();clr();if(r.dataset.id!==dragId)r.classList.add('over-'+side(r,e));});
+L.addEventListener('drop',function(e){
+  var r=e.target.closest('.row');if(!r||!dragId||r.dataset.id===dragId){clr();return;}e.preventDefault();
+  var id=dragId,after=side(r,e)==='r';dragId=null;clr();
+  order.splice(order.indexOf(id),1);var t=order.indexOf(r.dataset.id)+(after?1:0);order.splice(t,0,id);save();render();
 });
+var SZ='shavkero_full_order_size';
+function setSize(v){L.style.gridTemplateColumns='repeat(auto-fill,minmax('+v+'px,1fr))';try{localStorage.setItem(SZ,v);}catch(e){}}
+var sz=document.getElementById('size');try{var v0=localStorage.getItem(SZ);if(v0)sz.value=v0;}catch(e){}
+setSize(sz.value);sz.addEventListener('input',function(){setSize(this.value);});
 document.getElementById('q').addEventListener('input',render);
 document.getElementById('reset').addEventListener('click',function(){if(!confirm('Сбросить твой порядок к тому, что сейчас на сайте?'))return;try{localStorage.removeItem(KEY);}catch(e){}order=site.slice();render();toast('Сброшено');});
 document.getElementById('dl').addEventListener('click',function(){
