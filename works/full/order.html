@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Порядок работ — /works/full</title>
+<style>
+:root{--y:#e5ff00}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#000;color:#fff;font:14px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;-webkit-font-smoothing:antialiased}
+header{position:sticky;top:0;z-index:5;background:#000;border-bottom:1px solid #222;padding:14px 16px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+h1{font-size:15px;letter-spacing:.04em;text-transform:uppercase;font-weight:700;margin-right:auto}
+h1 a{color:#777;font-weight:400;text-decoration:none;margin-left:10px;font-size:12px}
+h1 a:hover{color:#fff}
+#q{background:#111;border:1px solid #333;color:#fff;border-radius:3px;padding:7px 10px;font:inherit;min-width:180px}
+button{cursor:pointer;background:transparent;color:#aaa;border:1px solid #444;border-radius:3px;padding:7px 11px;font:inherit;text-transform:uppercase;letter-spacing:.04em}
+button.pri{background:var(--y);color:#000;border-color:var(--y);font-weight:700}
+button:hover{color:#fff;border-color:#777}button.pri:hover{color:#000}
+#hint{padding:12px 16px;color:#777;font-size:12px;border-bottom:1px solid #161616}
+.row{display:grid;grid-template-columns:28px 34px 76px 1fr auto;gap:12px;align-items:center;padding:8px 16px;border-bottom:1px solid #161616;background:#000}
+.row:hover{background:#0b0b0b}
+.row.drag{opacity:.35}
+.row.over{box-shadow:inset 0 2px 0 var(--y)}
+.row.moved{background:#14160a}
+.h{cursor:grab;color:#555;font-size:18px;text-align:center;user-select:none}
+.n{color:#555;font-size:12px;text-align:right}
+.th{width:76px;height:44px;object-fit:cover;background:#111;border-radius:2px;display:block}
+.ti{font-weight:700;letter-spacing:.02em;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ti .id{color:#555;font-size:11px;font-weight:400;margin-left:8px}
+.bt{display:flex;gap:4px}
+.bt button{padding:4px 7px;font-size:11px}
+#toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--y);color:#000;font-weight:700;padding:9px 16px;border-radius:4px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:9}
+</style></head><body>
+<header>
+  <h1>Порядок работ <a href="admin.html">← категории</a> <a href="./" target="_blank">открыть /works/full ↗</a></h1>
+  <input id="q" placeholder="поиск по названию…">
+  <button id="reset">Сбросить к текущему на сайте</button>
+  <button id="dl" class="pri">Скачать order.json</button>
+</header>
+<div id="hint">Перетаскивай строки за «⋮⋮» или жми ⇡ наверх / ⇣ в конец / ↑ ↓. Сохраняется автоматически в этом браузере. Как закончишь — «Скачать order.json» и пришли мне файл: порядок на /works/full поменяется у всех. Новые видео, которых нет в файле, появляются сверху.</div>
+<div id="list"></div>
+<div id="toast"></div>
+<script>
+var KEY='shavkero_full_order_v1', works={}, order=[], site=[];
+function toast(m){var t=document.getElementById('toast');t.textContent=m;t.style.opacity=1;setTimeout(function(){t.style.opacity=0;},1400);}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(order));}catch(e){}}
+function norm(arr){ // только существующие id + новые сверху
+  var seen={},out=[];arr.forEach(function(id){if(works[id]&&!seen[id]){seen[id]=1;out.push(id);}});
+  var fresh=site.filter(function(id){return !seen[id];});
+  return fresh.concat(out);
+}
+function render(){
+  var q=(document.getElementById('q').value||'').toLowerCase(), list=document.getElementById('list');
+  list.innerHTML='';
+  order.forEach(function(id,i){
+    var w=works[id];
+    if(q&&w.t.toLowerCase().indexOf(q)<0&&id.indexOf(q)<0)return;
+    var r=document.createElement('div');r.className='row'+(site.indexOf(id)!==i?' moved':'');r.draggable=!q;r.dataset.id=id;
+    r.innerHTML='<span class="h" title="перетащить">⋮⋮</span><span class="n">'+(i+1)+'</span><img class="th" loading="lazy" src="'+(w.p||'')+'" alt>'+
+      '<div class="ti">'+w.t+'<span class="id">'+id+'</span></div>'+
+      '<div class="bt"><button data-a="top" title="наверх">⇡</button><button data-a="up">↑</button><button data-a="down">↓</button><button data-a="end" title="в конец">⇣</button></div>';
+    list.appendChild(r);
+  });
+}
+function move(id,to){var i=order.indexOf(id);if(i<0)return;order.splice(i,1);to=Math.max(0,Math.min(order.length,to));order.splice(to,0,id);save();render();}
+document.getElementById('list').addEventListener('click',function(e){
+  var b=e.target.closest&&e.target.closest('button[data-a]');if(!b)return;
+  var id=b.closest('.row').dataset.id,i=order.indexOf(id),a=b.dataset.a;
+  move(id,a==='top'?0:a==='end'?order.length:a==='up'?i-1:i+1);
+});
+var dragId=null;
+document.getElementById('list').addEventListener('dragstart',function(e){var r=e.target.closest('.row');if(!r)return;dragId=r.dataset.id;r.classList.add('drag');e.dataTransfer.effectAllowed='move';});
+document.getElementById('list').addEventListener('dragend',function(e){var r=e.target.closest('.row');if(r)r.classList.remove('drag');document.querySelectorAll('.over').forEach(function(x){x.classList.remove('over');});});
+document.getElementById('list').addEventListener('dragover',function(e){var r=e.target.closest('.row');if(!r||!dragId)return;e.preventDefault();document.querySelectorAll('.over').forEach(function(x){x.classList.remove('over');});r.classList.add('over');});
+document.getElementById('list').addEventListener('drop',function(e){
+  var r=e.target.closest('.row');if(!r||!dragId||r.dataset.id===dragId)return;e.preventDefault();
+  var id=dragId;dragId=null;order.splice(order.indexOf(id),1);order.splice(order.indexOf(r.dataset.id),0,id);save();render();
+});
+document.getElementById('q').addEventListener('input',render);
+document.getElementById('reset').addEventListener('click',function(){if(!confirm('Сбросить твой порядок к тому, что сейчас на сайте?'))return;try{localStorage.removeItem(KEY);}catch(e){}order=site.slice();render();toast('Сброшено');});
+document.getElementById('dl').addEventListener('click',function(){
+  var blob=new Blob([JSON.stringify(order,null,1)],{type:'application/json'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='order.json';a.click();toast('Скачано');
+});
+// Список работ берём с самой страницы /works/full (в текущем порядке сайта, с учётом order.json)
+fetch('./?nocache='+Date.now(),{cache:'no-store'}).then(function(r){return r.text();}).then(function(html){
+  var doc=new DOMParser().parseFromString(html,'text/html');
+  doc.querySelectorAll('#wo-li .wo-it').forEach(function(li){
+    var m=(li.getAttribute('data-src')||'').match(/\/video\/(\d+)/);if(!m)return;
+    var h=li.querySelector('.h'),img=li.querySelector('img');
+    works[m[1]]={t:h?h.textContent:m[1],p:img?img.getAttribute('src'):''};site.push(m[1]);
+  });
+  return fetch('order.json?x='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.json():[];}).catch(function(){return [];});
+}).then(function(saved){
+  if(Array.isArray(saved)&&saved.length)site=norm(saved);
+  var mine=null;try{mine=JSON.parse(localStorage.getItem(KEY)||'null');}catch(e){}
+  order=Array.isArray(mine)&&mine.length?norm(mine):site.slice();
+  render();
+});
+</script></body></html>
