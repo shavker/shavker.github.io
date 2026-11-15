@@ -67,4 +67,16 @@
   }
   if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}else{init();}
 })();
-</script></body></html>
+</script><script>/* static-mirror: на телефоне текст Info подгоняется на всю высоту экрана */(function(){
+function mob(){return !!document.querySelector('link[href*="/css/m.css"]');}
+var busy=false;
+function set(p,f){p.style.fontSize=f+'px';p.style.lineHeight=(f*1.068)+'px';p.style.letterSpacing=(f*-0.0181)+'px';}
+function fit(){var p=document.getElementById('in-pa');if(!p||!mob()||busy)return;busy=true;
+ var avail=window.innerHeight-96,lo=8,hi=90;
+ for(var k=0;k<20;k++){var m=(lo+hi)/2;set(p,m);if(p.scrollHeight<=avail&&p.scrollWidth<=p.clientWidth+1)lo=m;else hi=m;}
+ set(p,lo);busy=false;}
+var t;function later(){clearTimeout(t);t=setTimeout(fit,30);}
+window.addEventListener('resize',later);window.addEventListener('orientationchange',later);
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(later);
+new MutationObserver(function(){if(document.getElementById('in-pa'))later();}).observe(document.documentElement,{childList:true,subtree:true});
+later();})();</script></body></html>
