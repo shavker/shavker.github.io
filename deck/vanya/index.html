@@ -64,7 +64,7 @@ mark{background:var(--hi);color:inherit;padding:0 .08em}
 .end .line{border-color:var(--bg)}.end .line .who{color:#a9a69c}
 
 /* референсы */
-.gallery{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
 .card{margin:0;scroll-margin-top:16px}
 .card video{display:block;width:100%;height:auto;aspect-ratio:640/326;object-fit:cover;background:var(--tile)}
 .card figcaption{display:flex;justify-content:space-between;gap:12px;padding:8px 0 4px;font-size:12px;text-transform:uppercase;letter-spacing:.06em}
@@ -78,7 +78,7 @@ mark{background:var(--hi);color:inherit;padding:0 .08em}
 .how p{margin:0;font-size:clamp(17px,1.5vw,22px);line-height:1.25;letter-spacing:-.01em}
 
 footer{margin-top:auto;border-top:1px solid var(--line);padding-top:18px;display:flex;justify-content:space-between;gap:20px;font-size:12px;text-transform:uppercase;letter-spacing:.05em}
-@media(max-width:1000px){.gallery{grid-template-columns:repeat(2,minmax(0,1fr))}.shots,.end{grid-template-columns:1fr}}
+@media(max-width:1000px){.shots,.end{grid-template-columns:1fr}}
 @media(max-width:800px){.case{grid-template-columns:1fr;gap:18px;padding-bottom:52px}.how{grid-template-columns:1fr}}
 @media(max-width:700px){.top{font-size:10px}.top span:nth-child(2){display:none}.grid{grid-template-columns:1fr;gap:16px;padding-bottom:46px}.copy{font-size:21px}.kicker{font-size:26px}
   .time{flex-wrap:wrap}.time .n{white-space:normal}.time a{flex:1 1 30%!important;min-height:84px;gap:14px}.scale{display:none}footer{flex-direction:column}.trans{flex-direction:column;gap:8px}}
@@ -110,6 +110,16 @@ footer{margin-top:auto;border-top:1px solid var(--line);padding-top:18px;display
   </div>
 </section>
 
+<section class="grid" id="refs">
+  <div class="label">Референсы<span class="sub">CK One #ckmeforme</span></div>
+  <div class="gallery">
+    <figure class="card"><video data-src="./media/ref-1.mp4" poster="./media/ref-1.jpg" muted loop playsinline preload="none"></video></figure>
+    <figure class="card"><video data-src="./media/ref-5.mp4" poster="./media/ref-5.jpg" muted loop playsinline preload="none"></video></figure>
+    <figure class="card"><video data-src="./media/ref-6.mp4" poster="./media/ref-6.jpg" muted loop playsinline preload="none"></video></figure>
+    <figure class="card"><video data-src="./media/ref-8.mp4" poster="./media/ref-8.jpg" muted loop playsinline preload="none"></video></figure>
+  </div>
+</section>
+
 <section class="grid" style="padding-bottom:40px">
   <div class="label">Переходы</div>
   <div class="copy small">
@@ -137,7 +147,6 @@ footer{margin-top:auto;border-top:1px solid var(--line);padding-top:18px;display
     <div class="no"><span>Сцена 1</span><span>~9 сек</span></div>
     <h2>Квартира</h2>
     <p class="desc"><b>Место</b>Квартира, стиральная машина. Белый кот Беляш.</p>
-    <div class="refs">Реф <a href="#ref2">2</a><a href="#ref3">3</a><a href="#ref6">6</a></div>
   </div>
   <div class="shots">
     <div class="shot pov">
@@ -162,7 +171,6 @@ footer{margin-top:auto;border-top:1px solid var(--line);padding-top:18px;display
     <div class="no"><span>Сцена 2</span><span>~7 сек</span></div>
     <h2>Автобус</h2>
     <p class="desc"><b>Погода</b>За окнами ливень: вода идёт по стёклам сплошным слоем, огни улицы размыты. Все мокрые, в плащах, с капюшонов капает.</p>
-    <div class="refs">Реф <a href="#ref1">1</a><a href="#ref8">8</a><a href="#ref7">7</a></div>
   </div>
   <div class="shots">
     <div class="shot pov">
@@ -187,7 +195,6 @@ footer{margin-top:auto;border-top:1px solid var(--line);padding-top:18px;display
     <div class="no"><span>Сцена 3</span><span>~6 сек</span></div>
     <h2>Барбершоп</h2>
     <p class="desc"><b>Интерьер</b>Стены и мебель в дереве, на полу плитка.</p>
-    <div class="refs">Реф <a href="#ref4">4</a><a href="#ref1">1</a><a href="#ref6">6</a></div>
   </div>
   <div class="shots">
     <div class="shot pov">
@@ -212,7 +219,6 @@ footer{margin-top:auto;border-top:1px solid var(--line);padding-top:18px;display
     <div class="no"><span>Сцена 4</span><span>~4 сек + пэкшот 4 сек</span></div>
     <h2>Гримёрка</h2>
     <p class="desc"><b>Интерьер</b>Гримёрка вся в зеркалах на всю стену, с лампами.</p>
-    <div class="refs">Реф <a href="#ref5">5</a></div>
   </div>
   <div class="shots">
     <div class="shot pov">
@@ -240,19 +246,6 @@ footer{margin-top:auto;border-top:1px solid var(--line);padding-top:18px;display
   </div>
 </section>
 
-<section class="grid" id="refs">
-  <div class="label">Референсы<span class="sub">CK One #ckmeforme. Как камера-телефон живёт в руках и как выглядит статика со стороны.</span></div>
-  <div class="gallery">
-    <figure class="card" id="ref1"><video data-src="./media/ref-1.mp4" poster="./media/ref-1.jpg" muted loop playsinline preload="none"></video><figcaption><span>01</span><span>рука закрывает объектив</span></figcaption></figure>
-    <figure class="card" id="ref2"><video data-src="./media/ref-2.mp4" poster="./media/ref-2.jpg" muted loop playsinline preload="none"></video><figcaption><span>02</span><span>смотрят сверху в телефон</span></figcaption></figure>
-    <figure class="card" id="ref3"><video data-src="./media/ref-3.mp4" poster="./media/ref-3.jpg" muted loop playsinline preload="none"></video><figcaption><span>03</span><span>снизу, двое над телефоном</span></figcaption></figure>
-    <figure class="card" id="ref4"><video data-src="./media/ref-4.mp4" poster="./media/ref-4.jpg" muted loop playsinline preload="none"></video><figcaption><span>04</span><span>рука у объектива</span></figcaption></figure>
-    <figure class="card" id="ref5"><video data-src="./media/ref-5.mp4" poster="./media/ref-5.jpg" muted loop playsinline preload="none"></video><figcaption><span>05</span><span>гримёрка, зеркало с лампами</span></figcaption></figure>
-    <figure class="card" id="ref6"><video data-src="./media/ref-6.mp4" poster="./media/ref-6.jpg" muted loop playsinline preload="none"></video><figcaption><span>06</span><span>статика на всю комнату</span></figcaption></figure>
-    <figure class="card" id="ref7"><video data-src="./media/ref-7.mp4" poster="./media/ref-7.jpg" muted loop playsinline preload="none"></video><figcaption><span>07</span><span>статика сверху</span></figcaption></figure>
-    <figure class="card" id="ref8"><video data-src="./media/ref-8.mp4" poster="./media/ref-8.jpg" muted loop playsinline preload="none"></video><figcaption><span>08</span><span>снизу, из руки</span></figcaption></figure>
-  </div>
-</section>
 
 <section class="grid" id="how">
   <div class="label">Как снимать</div>
