@@ -38,10 +38,20 @@ slides = []
 slides.append(f'<section class="slide s-title">{top("01")}<div class="inner">{hero}{meta}</div></section>')
 gal = "".join(f'<img src="{(DECK / "media" / r).as_uri()}">' for r in refs)
 slides.append(f'<section class="slide s-idea">{top("02")}<div class="inner"><div class="col"><div class="label">Идея съёмки</div>{copy}</div><div class="col"><div class="label">Референсы</div><div class="gal">{gal}</div></div></div></section>')
-for n, sid in enumerate(["s1", "s2", "s3", "s4"], 3):
+n = 3
+for sid in ["s1", "s2", "s3", "s4"]:
     body = by_id(sid)
+    sb = re.search(r'<div class="sb">(.*?)</div><!--/sb-->', body, re.S)
+    body = re.sub(r'<div class="sb">.*?</div><!--/sb-->', "", body, flags=re.S)
     slides.append(f'<section class="slide s-case">{top(f"{n:02d}")}<div class="inner case">{body}</div></section>')
-slides.append(f'<section class="slide s-how">{top("07")}<div class="inner"><div class="label">Как снимать</div>{how}</div></section>')
+    n += 1
+    if sb:
+        title = re.search(r'<h2>(.*?)</h2>', body).group(1)
+        figs = re.sub(r'src="\./media/', 'src="' + (DECK / "media").as_uri() + '/', sb.group(1))
+        figs = re.sub(r'</?a[^>]*>', '', figs)
+        slides.append(f'<section class="slide s-sb">{top(f"{n:02d}")}<div class="inner"><div class="label">Раскадровка · {title}</div><div class="sbg">{figs}</div></div></section>')
+        n += 1
+slides.append(f'<section class="slide s-how">{top(f"{n:02d}")}<div class="inner"><div class="label">Как снимать</div>{how}</div></section>')
 
 css = """
 @page{size:1920px 1080px;margin:0}
@@ -78,6 +88,8 @@ q{quotes:none}
 .trans span:first-child{font-size:14px;text-transform:uppercase;letter-spacing:.06em;background:var(--hi);padding:3px 7px}
 .end{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .end .shot{background:var(--fg);color:var(--bg);border-color:var(--fg)}.end .shot .cam{border-color:rgba(243,241,234,.25)}.end .line{border-color:var(--bg)}.end .line .who,.end .shot .cam span:last-child{color:#a9a69c}
+.sbg{display:grid;grid-template-columns:690px 690px;gap:18px 28px;justify-content:center}.sbg figure{margin:0}.sbg img{display:block;width:690px;height:388px;object-fit:cover;background:var(--tile)}.sbg figcaption{display:flex;justify-content:space-between;gap:12px;padding:8px 0 0;font-size:15px;text-transform:uppercase;letter-spacing:.06em}.sbg figcaption span:last-child{color:var(--muted);text-transform:none;letter-spacing:0}
+.s-sb .inner{padding-top:24px}
 .s-how .how{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0 48px}
 .s-how .how div{border-top:1px solid var(--line);padding:16px 0 30px}
 .s-how .how h3{margin:0 0 12px;font-size:16px;font-weight:400;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
