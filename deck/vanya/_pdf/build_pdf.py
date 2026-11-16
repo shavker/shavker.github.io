@@ -41,9 +41,8 @@ slides.append(f'<section class="slide s-idea">{top("02")}<div class="inner"><div
 n = 3
 for sid in ["s1", "s2", "s3", "s4"]:
     body = by_id(sid)
-    figs_all = "".join(re.findall(r'<div class="fr[^"]*">(.*?)</div><!--/fr-->', body, re.S))
-    body = re.sub(r'<div class="fr[^"]*">.*?</div><!--/fr-->', "", body, flags=re.S)
-    sb = re.match(r'(.*)', figs_all, re.S) if figs_all else None
+    sb = re.search(r'<div class="sb">(.*?)</div><!--/sb-->', body, re.S)
+    body = re.sub(r'<div class="sb">.*?</div><!--/sb-->', "", body, flags=re.S)
     slides.append(f'<section class="slide s-case">{top(f"{n:02d}")}<div class="inner case">{body}</div></section>')
     n += 1
     if sb:
@@ -89,7 +88,7 @@ q{quotes:none}
 .trans span:first-child{font-size:14px;text-transform:uppercase;letter-spacing:.06em;background:var(--hi);padding:3px 7px}
 .end{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .end .shot{background:var(--fg);color:var(--bg);border-color:var(--fg)}.end .shot .cam{border-color:rgba(243,241,234,.25)}.end .line{border-color:var(--bg)}.end .line .who,.end .shot .cam span:last-child{color:#a9a69c}
-.sbg{display:grid;grid-template-columns:690px 690px;gap:18px 28px;justify-content:center}.sbg figure{margin:0}.sbg img{display:block;width:690px;height:388px;object-fit:cover;background:var(--tile)}.sbg figcaption{display:flex;justify-content:space-between;gap:12px;padding:8px 0 0;font-size:15px;text-transform:uppercase;letter-spacing:.06em}.sbg figcaption span:last-child{color:var(--muted);text-transform:none;letter-spacing:0}
+.sbg{display:grid;grid-template-columns:690px 690px;gap:18px 28px;justify-content:center}.sbg figure{margin:0;position:relative}.sbg .pov{position:absolute;left:12px;top:12px;background:var(--bg);padding:6px 10px;font-size:15px;text-transform:uppercase;letter-spacing:.06em;line-height:1}.sbg .pov::before{content:"";display:inline-block;width:10px;height:10px;border-radius:50%;background:#e2231a;margin-right:8px}.sbg img{display:block;width:690px;height:388px;object-fit:cover;background:var(--tile)}.sbg figcaption{display:flex;justify-content:space-between;gap:12px;padding:8px 0 0;font-size:15px;text-transform:uppercase;letter-spacing:.06em}.sbg figcaption span:last-child{color:var(--muted);text-transform:none;letter-spacing:0}
 .s-sb .inner{padding-top:24px}
 .s-how .how{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0 48px}
 .s-how .how div{border-top:1px solid var(--line);padding:16px 0 30px}
