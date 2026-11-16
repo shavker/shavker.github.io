@@ -41,8 +41,9 @@ slides.append(f'<section class="slide s-idea">{top("02")}<div class="inner"><div
 n = 3
 for sid in ["s1", "s2", "s3", "s4"]:
     body = by_id(sid)
-    sb = re.search(r'<div class="sb">(.*?)</div><!--/sb-->', body, re.S)
-    body = re.sub(r'<div class="sb">.*?</div><!--/sb-->', "", body, flags=re.S)
+    figs_all = "".join(re.findall(r'<div class="fr[^"]*">(.*?)</div><!--/fr-->', body, re.S))
+    body = re.sub(r'<div class="fr[^"]*">.*?</div><!--/fr-->', "", body, flags=re.S)
+    sb = re.match(r'(.*)', figs_all, re.S) if figs_all else None
     slides.append(f'<section class="slide s-case">{top(f"{n:02d}")}<div class="inner case">{body}</div></section>')
     n += 1
     if sb:

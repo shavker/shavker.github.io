@@ -63,12 +63,12 @@ mark{background:var(--hi);color:inherit;padding:0 .08em}
 .end .shot .cam{border-color:rgba(243,241,234,.25)}.end .shot .cam span:last-child{color:#a9a69c}
 .end .line{border-color:var(--bg)}.end .line .who{color:#a9a69c}
 
-.case .sb{grid-column:2;display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:6px}
-.case .sb figure{margin:0}.case .sb a{border:0;display:block}.case .sb img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;background:var(--tile)}
-.case .sb figcaption{display:flex;justify-content:space-between;gap:12px;padding:8px 0 0;font-size:12px;text-transform:uppercase;letter-spacing:.06em}
-.case .sb figcaption span:last-child{color:var(--muted);text-transform:none;letter-spacing:0;text-align:right}
-@media(max-width:800px){.case .sb{grid-column:1}}
-@media(max-width:700px){.case .sb figcaption{flex-direction:column;gap:2px}.case .sb figcaption span:last-child{text-align:left}}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:-2px 0 4px}.fr.one{grid-template-columns:1fr}.fr.odd figure:first-child{grid-column:1/-1}
+.fr figure{margin:0;min-width:0}.fr a{border:0;display:block}.fr img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;background:var(--tile)}
+.fr figcaption{display:flex;flex-direction:column;gap:2px;padding:6px 0 0;font-size:11px;text-transform:uppercase;letter-spacing:.05em}
+.fr figcaption span:last-child{color:var(--muted);text-transform:none;letter-spacing:0}
+.case,.shots,.shot,.case-meta{min-width:0}.trans span:last-child{min-width:0;overflow-wrap:anywhere}
+.end .fr figcaption span:last-child{color:#a9a69c}
 /* референсы */
 .gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
 .card{margin:0;scroll-margin-top:16px}
@@ -135,12 +135,14 @@ footer{margin-top:auto;border-top:1px solid var(--line);padding-top:18px;display
   </div>
   <div class="shots">
     <div class="shot pov">
+      <div class="fr"><figure><a href="./media/sb/1.1.jpg" target="_blank" rel="noopener"><img src="./media/sb/1.1.jpg" alt="Кадр 1.1" loading="lazy"></a><figcaption><span>1.1 · POV в руке, 14 мм · 1,5 с</span><span>тянет свитер из барабана</span></figcaption></figure><figure><a href="./media/sb/1.2.jpg" target="_blank" rel="noopener"><img src="./media/sb/1.2.jpg" alt="Кадр 1.2" loading="lazy"></a><figcaption><span>1.2 · POV с пола, 14 мм · 2,5 с</span><span>«Ну и что мне теперь с этим делать?»</span></figcaption></figure></div><!--/fr-->
       <div class="cam"><span>POV · вопрос</span><span>от телефона</span></div>
       <p>Парень у стиральной машины, портрет крупно. Одной рукой держит телефон, другой лезет в барабан и тянет мокрый свитер, тот застрял.</p>
       <p>Вытягивает. Кладёт телефон на пол экраном вверх и разворачивает над ним севший свитер: снизу видим свитер и лицо парня над ним. Свитер сел так, что теперь впору коту.</p>
       <div class="line"><span class="who">Парень, в телефон</span><q>Ну и что мне теперь с этим делать?</q></div>
     </div>
     <div class="shot">
+      <div class="fr"><figure><a href="./media/sb/1.3.jpg" target="_blank" rel="noopener"><img src="./media/sb/1.3.jpg" alt="Кадр 1.3" loading="lazy"></a><figcaption><span>1.3 · статика от пола, 24 мм · 2 с</span><span>Ваня с Беляшем</span></figcaption></figure><figure><a href="./media/sb/1.4.jpg" target="_blank" rel="noopener"><img src="./media/sb/1.4.jpg" alt="Кадр 1.4" loading="lazy"></a><figcaption><span>1.4 · та же статика · 1 с</span><span>капля в объектив</span></figcaption></figure></div><!--/fr-->
       <div class="cam"><span>Ответ</span><span>средне-общий, камера у пола</span></div>
       <p>На переднем плане крупно лицо Вани: он лежит на полу ровно там, где лежит телефон, и жамкает белого кота на груди. Смотрит снизу на парня. За ним парень со свитером и стиралка.</p>
       <div class="line"><span class="who">Ваня</span><q>Скажу честно, Беляшу он теперь подходит больше</q></div>
@@ -148,7 +150,6 @@ footer{margin-top:auto;border-top:1px solid var(--line);padding-top:18px;display
     </div>
     <div class="trans"><span>Переход</span><span>Парень встряхивает свитер перед камерой, капля попадает в объектив.</span></div>
   </div>
-  <div class="sb"><figure><a href="./media/sb/1.1.jpg" target="_blank" rel="noopener"><img src="./media/sb/1.1.jpg" alt="Кадр 1.1" loading="lazy"></a><figcaption><span>1.1 · POV в руке, 14 мм · 1,5 с</span><span>тянет свитер из барабана</span></figcaption></figure><figure><a href="./media/sb/1.2.jpg" target="_blank" rel="noopener"><img src="./media/sb/1.2.jpg" alt="Кадр 1.2" loading="lazy"></a><figcaption><span>1.2 · POV с пола, 14 мм · 2,5 с</span><span>«Ну и что мне теперь с этим делать?»</span></figcaption></figure><figure><a href="./media/sb/1.3.jpg" target="_blank" rel="noopener"><img src="./media/sb/1.3.jpg" alt="Кадр 1.3" loading="lazy"></a><figcaption><span>1.3 · статика от пола, 24 мм · 2 с</span><span>Ваня с Беляшем</span></figcaption></figure><figure><a href="./media/sb/1.4.jpg" target="_blank" rel="noopener"><img src="./media/sb/1.4.jpg" alt="Кадр 1.4" loading="lazy"></a><figcaption><span>1.4 · та же статика · 1 с</span><span>капля в объектив</span></figcaption></figure></div><!--/sb-->
 </section>
 
 <!-- 2 -->
@@ -160,12 +161,14 @@ footer{margin-top:auto;border-top:1px solid var(--line);padding-top:18px;display
   </div>
   <div class="shots">
     <div class="shot pov">
+      <div class="fr odd"><figure><a href="./media/sb/2.1.jpg" target="_blank" rel="noopener"><img src="./media/sb/2.1.jpg" alt="Кадр 2.1" loading="lazy"></a><figcaption><span>2.1 · POV у поручня, 14 мм · 1,5 с</span><span>телефон выскальзывает</span></figcaption></figure><figure><a href="./media/sb/2.2.jpg" target="_blank" rel="noopener"><img src="./media/sb/2.2.jpg" alt="Кадр 2.2" loading="lazy"></a><figcaption><span>2.2 · POV снизу, 14 мм · 1 с</span><span>давка, держит телефон</span></figcaption></figure><figure><a href="./media/sb/2.3.jpg" target="_blank" rel="noopener"><img src="./media/sb/2.3.jpg" alt="Кадр 2.3" loading="lazy"></a><figcaption><span>2.3 · POV над головой, 14 мм · 2 с</span><span>шёпот в сердцах</span></figcaption></figure></div><!--/fr-->
       <div class="cam"><span>POV · вопрос</span><span>от телефона</span></div>
       <p>Телефон у столба поручня с красной кнопкой «стоп». Девушка держит в руках гору конспектов и учебников и пытается удержать телефон длинными ногтями, он выскальзывает, кадр дёргается.</p>
       <p>Двери открываются, входит толпа и заталкивает её глубже в салон, битком. Мокрые плащи проходят вплотную к объективу. Она поднимает телефон чуть над собой, чтобы его не раздавили, и в сердцах, но шёпотом говорит в него снизу вверх.</p>
       <div class="line"><span class="who">Девушка, в телефон</span><q>У меня к тебе столько вопросов… Но до зачета 20 минут</q></div>
     </div>
     <div class="shot">
+      <div class="fr one"><figure><a href="./media/sb/2.4.jpg" target="_blank" rel="noopener"><img src="./media/sb/2.4.jpg" alt="Кадр 2.4" loading="lazy"></a><figcaption><span>2.4 · статика, 100 мм · 2 с</span><span>Ваня за плечом</span></figcaption></figure></div><!--/fr-->
       <div class="cam"><span>Ответ</span><span>средне-крупный, полуверхняя точка</span></div>
       <p>Ракурс с другой стороны. Лицо Вани там, где в конце был телефон, над её плечом, вплотную к ней: мокрые локоны, влажное лицо. Отвечает тихо, почти на ухо.</p>
       <div class="line"><span class="who">Ваня</span><q>А если подскажу, как выучить все билеты за пять остановок?</q></div>
@@ -173,7 +176,6 @@ footer{margin-top:auto;border-top:1px solid var(--line);padding-top:18px;display
     </div>
     <div class="trans"><span>Переход</span><span>В духоте битком набитого автобуса запотевает объектив камеры.</span></div>
   </div>
-  <div class="sb"><figure><a href="./media/sb/2.1.jpg" target="_blank" rel="noopener"><img src="./media/sb/2.1.jpg" alt="Кадр 2.1" loading="lazy"></a><figcaption><span>2.1 · POV у поручня, 14 мм · 1,5 с</span><span>телефон выскальзывает</span></figcaption></figure><figure><a href="./media/sb/2.2.jpg" target="_blank" rel="noopener"><img src="./media/sb/2.2.jpg" alt="Кадр 2.2" loading="lazy"></a><figcaption><span>2.2 · POV снизу, 14 мм · 1 с</span><span>давка, держит телефон</span></figcaption></figure><figure><a href="./media/sb/2.3.jpg" target="_blank" rel="noopener"><img src="./media/sb/2.3.jpg" alt="Кадр 2.3" loading="lazy"></a><figcaption><span>2.3 · POV над головой, 14 мм · 2 с</span><span>шёпот в сердцах</span></figcaption></figure><figure><a href="./media/sb/2.4.jpg" target="_blank" rel="noopener"><img src="./media/sb/2.4.jpg" alt="Кадр 2.4" loading="lazy"></a><figcaption><span>2.4 · статика, 100 мм · 2 с</span><span>Ваня за плечом</span></figcaption></figure></div><!--/sb-->
 </section>
 
 <!-- 3 -->
@@ -185,12 +187,14 @@ footer{margin-top:auto;border-top:1px solid var(--line);padding-top:18px;display
   </div>
   <div class="shots">
     <div class="shot pov">
+      <div class="fr odd"><figure><a href="./media/sb/3.1.jpg" target="_blank" rel="noopener"><img src="./media/sb/3.1.jpg" alt="Кадр 3.1" loading="lazy"></a><figcaption><span>3.1 · POV в руке · 1 с</span><span>объектив запотел</span></figcaption></figure><figure><a href="./media/sb/3.2.jpg" target="_blank" rel="noopener"><img src="./media/sb/3.2.jpg" alt="Кадр 3.2" loading="lazy"></a><figcaption><span>3.2 · POV · 1 с</span><span>барбер крутит кресло</span></figcaption></figure><figure><a href="./media/sb/3.3.jpg" target="_blank" rel="noopener"><img src="./media/sb/3.3.jpg" alt="Кадр 3.3" loading="lazy"></a><figcaption><span>3.3 · POV над головой, 14 мм · 2,5 с</span><span>«А это вообще отрастёт?»</span></figcaption></figure></div><!--/fr-->
       <div class="cam"><span>POV · вопрос</span><span>от телефона</span></div>
       <p>Палец вытирает запотевший объектив фронтальной камеры телефона. Парень в кресле, держит телефон перед собой как зеркало. Барбер разворачивает кресло, кадр проворачивается вместе с ним.</p>
       <p>Парень поднимает телефон, разглядывает нелепую чёлку, приглаживает её, она снова встаёт. Сдаётся и опускает руку с телефоном низко сбоку, на уровень плеча, к соседнему креслу.</p>
       <div class="line"><span class="who">Парень, шёпотом, в телефон</span><q>А это вообще отрастёт?</q></div>
     </div>
     <div class="shot">
+      <div class="fr one"><figure><a href="./media/sb/3.4.jpg" target="_blank" rel="noopener"><img src="./media/sb/3.4.jpg" alt="Кадр 3.4" loading="lazy"></a><figcaption><span>3.4 · статика сбоку, 35 мм · 2 с</span><span>Ваня в пене</span></figcaption></figure></div><!--/fr-->
       <div class="cam"><span>Ответ</span><span>статика сбоку, на уровне кресла</span></div>
       <p>Ваня в соседнем кресле как клиент: пена на лице, полотенце на шее. Барбер откинул его кресло для бритья, и голова Вани оказывается ровно там, где был телефон, рядом с головой парня с чёлкой.</p>
       <div class="line"><span class="who">Ваня, тихо</span><q>Могу сказать, где купить крутую кепку</q></div>
@@ -198,7 +202,6 @@ footer{margin-top:auto;border-top:1px solid var(--line);padding-top:18px;display
     </div>
     <div class="trans"><span>Переход</span><span>Барбер включает фен, срезанные волосы летят в камеру.</span></div>
   </div>
-  <div class="sb"><figure><a href="./media/sb/3.1.jpg" target="_blank" rel="noopener"><img src="./media/sb/3.1.jpg" alt="Кадр 3.1" loading="lazy"></a><figcaption><span>3.1 · POV в руке · 1 с</span><span>объектив запотел</span></figcaption></figure><figure><a href="./media/sb/3.2.jpg" target="_blank" rel="noopener"><img src="./media/sb/3.2.jpg" alt="Кадр 3.2" loading="lazy"></a><figcaption><span>3.2 · POV · 1 с</span><span>барбер крутит кресло</span></figcaption></figure><figure><a href="./media/sb/3.3.jpg" target="_blank" rel="noopener"><img src="./media/sb/3.3.jpg" alt="Кадр 3.3" loading="lazy"></a><figcaption><span>3.3 · POV над головой, 14 мм · 2,5 с</span><span>«А это вообще отрастёт?»</span></figcaption></figure><figure><a href="./media/sb/3.4.jpg" target="_blank" rel="noopener"><img src="./media/sb/3.4.jpg" alt="Кадр 3.4" loading="lazy"></a><figcaption><span>3.4 · статика сбоку, 35 мм · 2 с</span><span>Ваня в пене</span></figcaption></figure></div><!--/sb-->
 </section>
 
 <!-- 4 -->
@@ -210,11 +213,13 @@ footer{margin-top:auto;border-top:1px solid var(--line);padding-top:18px;display
   </div>
   <div class="shots">
     <div class="shot pov">
+      <div class="fr one"><figure><a href="./media/sb/4.1.jpg" target="_blank" rel="noopener"><img src="./media/sb/4.1.jpg" alt="Кадр 4.1" loading="lazy"></a><figcaption><span>4.1 · POV, 14 мм · 2 с</span><span>открываемся из-за кофе</span></figcaption></figure></div><!--/fr-->
       <div class="cam"><span>POV · вопрос</span><span>от телефона</span></div>
       <p>Кадр открывается из-за бумажного стакана кофе: он перекрывает Ваню целиком. Ваня отводит стакан, видно лицо. В одной руке кофе, в другой телефон, поэтому с ГигаЧатом он говорит голосом. Ваня подходит к гримёрному креслу, начинает садиться.</p>
       <div class="line"><span class="who">Ваня, в телефон</span><q>ГигаЧат, почему все вокруг благодарят меня за советы?</q></div>
     </div>
     <div class="shot">
+      <div class="fr"><figure><a href="./media/sb/4.2.jpg" target="_blank" rel="noopener"><img src="./media/sb/4.2.jpg" alt="Кадр 4.2" loading="lazy"></a><figcaption><span>4.2 · статика от стола, 35 мм · 2 с</span><span>«А это ты мне скажи»</span></figcaption></figure><figure><a href="./media/sb/4.3.jpg" target="_blank" rel="noopener"><img src="./media/sb/4.3.jpg" alt="Кадр 4.3" loading="lazy"></a><figcaption><span>4.3 · укрупнение, 50 мм · 2 с</span><span>взгляд в камеру</span></figcaption></figure></div><!--/fr-->
       <div class="cam"><span>Ответ</span><span>статика со стороны</span></div>
       <p>Ваня садится в кресло. Одной рукой ставит кофе на стол перед собой, в другой телефон экраном к нам: <mark>открыт голосовой режим ГигаЧата</mark>.</p>
       <div class="line"><span class="who">ГигаЧат голосом Вани</span><q>А это ты мне скажи</q></div>
@@ -226,13 +231,13 @@ footer{margin-top:auto;border-top:1px solid var(--line);padding-top:18px;display
         <div class="line"><span class="who">Голос за кадром</span><q>Новый войсмод с голосом Вани Дмитриенко — уже в твоём ИИ-помощнике</q></div>
       </div>
       <div class="shot">
+        <div class="fr one"><figure><a href="./media/sb/5.jpg" target="_blank" rel="noopener"><img src="./media/sb/5.jpg" alt="Кадр 5" loading="lazy"></a><figcaption><span>5 · пэкшот · 3 с</span><span>телефон фронтально</span></figcaption></figure></div><!--/fr-->
         <div class="cam"><span>Пэкшот</span><span>3 сек</span></div>
         <p>Телефон крупно, голосовой режим ГигаЧата.</p>
         <div class="line"><span class="who">Слоган</span><q>ГигаЧат — всё как Ваня скажет</q></div>
       </div>
     </div>
   </div>
-  <div class="sb"><figure><a href="./media/sb/4.1.jpg" target="_blank" rel="noopener"><img src="./media/sb/4.1.jpg" alt="Кадр 4.1" loading="lazy"></a><figcaption><span>4.1 · POV, 14 мм · 2 с</span><span>открываемся из-за кофе</span></figcaption></figure><figure><a href="./media/sb/4.2.jpg" target="_blank" rel="noopener"><img src="./media/sb/4.2.jpg" alt="Кадр 4.2" loading="lazy"></a><figcaption><span>4.2 · статика от стола, 35 мм · 2 с</span><span>«А это ты мне скажи»</span></figcaption></figure><figure><a href="./media/sb/4.3.jpg" target="_blank" rel="noopener"><img src="./media/sb/4.3.jpg" alt="Кадр 4.3" loading="lazy"></a><figcaption><span>4.3 · укрупнение, 50 мм · 2 с</span><span>взгляд в камеру</span></figcaption></figure><figure><a href="./media/sb/5.jpg" target="_blank" rel="noopener"><img src="./media/sb/5.jpg" alt="Кадр 5" loading="lazy"></a><figcaption><span>5 · пэкшот · 3 с</span><span>телефон фронтально</span></figcaption></figure></div><!--/sb-->
 </section>
 
 
