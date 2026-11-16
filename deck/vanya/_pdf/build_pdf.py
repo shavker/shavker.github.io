@@ -27,7 +27,7 @@ hero = re.sub(r'<div class="hero-actions">.*?</div>', "", hero, flags=re.S)
 intro = re.search(r'<section class="grid">\s*(<dl class="meta">.*?)</section>', SRC, re.S).group(1)
 meta = re.search(r'<dl class="meta">.*?</dl>', intro, re.S).group(0)
 copy = re.search(r'<div class="copy">.*?</div>', intro, re.S).group(0)
-refs = re.findall(r'poster="\./media/(ref-\d+\.jpg)"', by_id("refs"))
+refs = re.findall(r'poster="\./media/(ref-[\w-]+\.jpg)"', by_id("refs"))
 how = by_id("how")
 how = re.sub(r'<div class="label">.*?</div>', "", how, count=1)
 
@@ -43,14 +43,14 @@ for sid in ["s1", "s2", "s3", "s4"]:
     body = by_id(sid)
     sb = re.search(r'<div class="sb">(.*?)</div><!--/sb-->', body, re.S)
     body = re.sub(r'<div class="sb">.*?</div><!--/sb-->', "", body, flags=re.S)
-    slides.append(f'<section class="slide s-case">{top(f"{n:02d}")}<div class="inner case">{body}</div></section>')
-    n += 1
+    figs = ""
     if sb:
-        title = re.search(r'<h2>(.*?)</h2>', body).group(1)
         figs = re.sub(r'src="\./media/', 'src="' + (DECK / "media").as_uri() + '/', sb.group(1))
         figs = re.sub(r'</?a[^>]*>', '', figs)
-        slides.append(f'<section class="slide s-sb">{top(f"{n:02d}")}<div class="inner"><div class="label">Раскадровка · {title}</div><div class="sbg">{figs}</div></div></section>')
-        n += 1
+    cm = re.search(r'<div class="case-meta">.*?</div>\s*(?=<div class="shots">)', body, re.S).group(0)
+    sh = body[body.index('<div class="shots">'):]
+    slides.append(f'<section class="slide s-case">{top(f"{n:02d}")}<div class="inner sc"><div class="lc"><div class="strip">{figs}</div>{cm}</div><div class="rc">{sh}</div></div></section>')
+    n += 1
 slides.append(f'<section class="slide s-how">{top(f"{n:02d}")}<div class="inner"><div class="label">Как снимать</div>{how}</div></section>')
 
 css = """
@@ -68,9 +68,9 @@ q{quotes:none}
 .s-title .kicker{font-size:46px;line-height:1.05;letter-spacing:-.035em;max-width:1300px;margin:36px 0 0}
 .meta{display:grid;grid-template-columns:repeat(5,1fr);gap:24px;margin:0;border-top:1px solid var(--line);padding-top:20px}
 .meta dt{font-size:15px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}.meta dd{margin:6px 0 0;font-size:22px}
-.s-idea .inner{display:grid;grid-template-columns:1.15fr 1fr;gap:64px}
-.s-idea .copy{font-size:31px;line-height:1.16;letter-spacing:-.02em}.s-idea .copy p{margin:0 0 .8em}
-.gal{display:grid;grid-template-columns:1fr 1fr;gap:14px}.gal img{width:100%;aspect-ratio:640/326;object-fit:cover;display:block;background:var(--tile)}
+.s-idea .inner{display:grid;grid-template-columns:600px 1fr;gap:64px}.s-idea .col:last-child{display:flex;flex-direction:column;min-height:0}
+.s-idea .copy{font-size:28px;line-height:1.18;letter-spacing:-.02em}.s-idea .copy p{margin:0 0 .8em}
+.gal{flex:1;min-height:0;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:14px}.gal img{width:100%;height:100%;object-fit:cover;display:block;background:var(--tile)}
 .case{display:grid;grid-template-columns:400px 1fr;gap:56px}
 .case-meta{display:flex;flex-direction:column;gap:22px}
 .case .no{display:flex;justify-content:space-between;font-size:16px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
@@ -90,6 +90,11 @@ q{quotes:none}
 .end .shot{background:var(--fg);color:var(--bg);border-color:var(--fg)}.end .shot .cam{border-color:rgba(243,241,234,.25)}.end .line{border-color:var(--bg)}.end .line .who,.end .shot .cam span:last-child{color:#a9a69c}
 .sbg{display:grid;grid-template-columns:690px 690px;gap:18px 28px;justify-content:center}.sbg figure{margin:0;position:relative}.sbg .pov{position:absolute;left:12px;top:12px;background:var(--bg);padding:6px 10px;font-size:15px;text-transform:uppercase;letter-spacing:.06em;line-height:1}.sbg .pov::before{content:"";display:inline-block;width:10px;height:10px;border-radius:50%;background:#e2231a;margin-right:8px}.sbg img{display:block;width:690px;height:388px;object-fit:cover;background:var(--tile)}.sbg figcaption{display:flex;justify-content:space-between;gap:12px;padding:8px 0 0;font-size:15px;text-transform:uppercase;letter-spacing:.06em}.sbg figcaption span:last-child{color:var(--muted);text-transform:none;letter-spacing:0}
 .s-sb .inner{padding-top:24px}
+.sc{display:grid;grid-template-columns:1060px 1fr;gap:40px}.lc{display:flex;flex-direction:column;gap:26px;min-width:0}.rc{min-width:0}.rc .shots{grid-template-columns:1fr;gap:12px}.rc .end{grid-template-columns:1fr 1fr}.sc .case-meta{display:grid;grid-template-columns:auto 1fr;gap:6px 40px;align-items:end}.sc .case-meta .no{grid-column:1/-1}.sc .case-meta .desc{max-width:420px}
+.strip{display:grid;grid-template-columns:1fr 1fr;gap:16px 16px}.strip figure{margin:0;position:relative;min-width:0}.strip img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;background:var(--tile)}
+.strip figcaption{display:flex;justify-content:space-between;gap:8px;padding:6px 0 0;font-size:12px;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap;overflow:hidden}.strip figcaption span:last-child{color:var(--muted);text-transform:none;letter-spacing:0;overflow:hidden;text-overflow:ellipsis}
+.strip .pov{position:absolute;left:10px;top:10px;background:var(--bg);padding:5px 9px;font-size:13px;text-transform:uppercase;letter-spacing:.06em;line-height:1}.strip .pov::before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;background:#e2231a;margin-right:7px}
+.s-case .inner{padding-top:28px;font-size:19px}.s-case h2{font-size:84px;line-height:.9;letter-spacing:-.055em;font-weight:500;margin:0}.s-case .no{display:flex;justify-content:space-between;font-size:15px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}.s-case .desc{font-size:18px;line-height:1.35;margin:0}.s-case .desc b{display:block;font-weight:400;font-size:14px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:4px}.s-case .shot{padding:18px;gap:10px}
 .s-how .how{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0 48px}
 .s-how .how div{border-top:1px solid var(--line);padding:16px 0 30px}
 .s-how .how h3{margin:0 0 12px;font-size:16px;font-weight:400;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
