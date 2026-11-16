@@ -1,0 +1,100 @@
+#!/usr/bin/env python3
+"""Собирает deck/vanya/vanya-directors-notes.pdf из index.html: горизонтальные слайды 1920x1080.
+Текст берётся из index.html, поэтому после правок страницы достаточно перезапустить скрипт.
+Запуск: python3 deck/vanya/_pdf/build_pdf.py
+"""
+import re, subprocess, tempfile
+from pathlib import Path
+
+DECK = Path(__file__).resolve().parent.parent
+SRC = (DECK / "index.html").read_text()
+OUT = DECK / "vanya-directors-notes.pdf"
+CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+
+
+def section(sel):
+    m = re.search(r'<section class="' + sel + r'"[^>]*>(.*?)</section>', SRC, re.S)
+    return m.group(1) if m else ""
+
+
+def by_id(i):
+    m = re.search(r'<section[^>]*id="' + i + r'"[^>]*>(.*?)</section>', SRC, re.S)
+    return m.group(1)
+
+
+hero = section("hero")
+hero = re.sub(r'<div class="hero-actions">.*?</div>', "", hero, flags=re.S)
+intro = re.search(r'<section class="grid">\s*(<dl class="meta">.*?)</section>', SRC, re.S).group(1)
+meta = re.search(r'<dl class="meta">.*?</dl>', intro, re.S).group(0)
+copy = re.search(r'<div class="copy">.*?</div>', intro, re.S).group(0)
+refs = re.findall(r'poster="\./media/(ref-\d+\.jpg)"', by_id("refs"))
+how = by_id("how")
+how = re.sub(r'<div class="label">.*?</div>', "", how, count=1)
+
+def top(page):
+    return f'<div class="top"><span>Anton Shavkero · Director\'s notes</span><span>Как Ваня скажет</span><span>{page}</span></div>'
+
+slides = []
+slides.append(f'<section class="slide s-title">{top("01")}<div class="inner">{hero}{meta}</div></section>')
+gal = "".join(f'<img src="{(DECK / "media" / r).as_uri()}">' for r in refs)
+slides.append(f'<section class="slide s-idea">{top("02")}<div class="inner"><div class="col"><div class="label">Идея съёмки</div>{copy}</div><div class="col"><div class="label">Референсы</div><div class="gal">{gal}</div></div></div></section>')
+for n, sid in enumerate(["s1", "s2", "s3", "s4"], 3):
+    body = by_id(sid)
+    slides.append(f'<section class="slide s-case">{top(f"{n:02d}")}<div class="inner case">{body}</div></section>')
+slides.append(f'<section class="slide s-how">{top("07")}<div class="inner"><div class="label">Как снимать</div>{how}</div></section>')
+
+css = """
+@page{size:1920px 1080px;margin:0}
+:root{--bg:#f3f1ea;--fg:#101010;--muted:#69675f;--line:rgba(16,16,16,.18);--tile:#dcd9d0;--hi:#e9ff00}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--fg);font-family:Arial,Helvetica,sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.slide{width:1920px;height:1080px;padding:56px 72px;display:flex;flex-direction:column;page-break-after:always;overflow:hidden;position:relative}
+.top{display:flex;justify-content:space-between;font-size:16px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);border-bottom:1px solid var(--line);padding-bottom:16px}
+.inner{flex:1;min-height:0;padding-top:40px;font-size:24px}
+.label{font-size:16px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:20px}
+mark{background:var(--hi);color:inherit;padding:0 .08em}
+q{quotes:none}
+.s-title .inner{display:flex;flex-direction:column;justify-content:space-between}
+.s-title h1{font-size:210px;line-height:.86;letter-spacing:-.07em;font-weight:500;margin:40px 0 0}.s-title h1 .x{color:var(--muted)}
+.s-title .kicker{font-size:46px;line-height:1.05;letter-spacing:-.035em;max-width:1300px;margin:36px 0 0}
+.meta{display:grid;grid-template-columns:repeat(5,1fr);gap:24px;margin:0;border-top:1px solid var(--line);padding-top:20px}
+.meta dt{font-size:15px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}.meta dd{margin:6px 0 0;font-size:22px}
+.s-idea .inner{display:grid;grid-template-columns:1.15fr 1fr;gap:64px}
+.s-idea .copy{font-size:31px;line-height:1.16;letter-spacing:-.02em}.s-idea .copy p{margin:0 0 .8em}
+.gal{display:grid;grid-template-columns:1fr 1fr;gap:14px}.gal img{width:100%;aspect-ratio:640/326;object-fit:cover;display:block;background:var(--tile)}
+.case{display:grid;grid-template-columns:400px 1fr;gap:56px}
+.case-meta{display:flex;flex-direction:column;gap:22px}
+.case .no{display:flex;justify-content:space-between;font-size:16px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.case h2{font-size:80px;line-height:.9;letter-spacing:-.055em;font-weight:500;margin:0}
+.case .desc{font-size:20px;line-height:1.35;margin:0}.case .desc b{display:block;font-weight:400;font-size:15px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:6px}
+.shots{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-content:start}
+.shot{background:#fbfaf6;border:1px solid var(--line);padding:24px;display:flex;flex-direction:column;gap:14px}
+.shot .cam{display:flex;justify-content:space-between;font-size:15px;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--line);padding-bottom:10px}
+.shot .cam span:last-child{color:var(--muted)}
+.shot.pov .cam span:first-child::before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;background:#e2231a;margin-right:8px;vertical-align:1px}
+.shot p{margin:0;font-size:1em;line-height:1.33}
+.line{border-left:3px solid var(--fg);padding:2px 0 2px 16px}.line .who{display:block;font-size:14px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:6px}
+.line q{display:block;font-size:1.35em;line-height:1.12;letter-spacing:-.03em}
+.trans{grid-column:1/-1;display:flex;gap:18px;align-items:baseline;border-top:1px solid var(--line);padding-top:14px;font-size:.9em}
+.trans span:first-child{font-size:14px;text-transform:uppercase;letter-spacing:.06em;background:var(--hi);padding:3px 7px}
+.end{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.end .shot{background:var(--fg);color:var(--bg);border-color:var(--fg)}.end .shot .cam{border-color:rgba(243,241,234,.25)}.end .line{border-color:var(--bg)}.end .line .who,.end .shot .cam span:last-child{color:#a9a69c}
+.s-how .how{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0 48px}
+.s-how .how div{border-top:1px solid var(--line);padding:16px 0 30px}
+.s-how .how h3{margin:0 0 12px;font-size:16px;font-weight:400;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.s-how .how p{margin:0;font-size:1em;line-height:1.3}
+"""
+# Ужимаем шрифт слайда, пока содержимое не влезет в 1080.
+fit = """
+<script>
+document.querySelectorAll('.slide .inner').forEach(function(el){
+  var fs=parseFloat(getComputedStyle(el).fontSize);
+  while(el.scrollHeight>el.clientHeight+1 && fs>14){fs-=0.5; el.style.fontSize=fs+'px';}
+});
+</script>"""
+html = f'<!doctype html><html lang="ru"><head><meta charset="utf-8"><style>{css}</style></head><body>{"".join(slides)}{fit}</body></html>'
+with tempfile.TemporaryDirectory() as td:
+    p = Path(td) / "slides.html"
+    p.write_text(html)
+    subprocess.run([CHROME, "--headless=new", "--disable-gpu", "--no-pdf-header-footer", "--virtual-time-budget=4000",
+                    f"--print-to-pdf={OUT}", p.as_uri()], check=True, capture_output=True)
+print(OUT, OUT.stat().st_size)
