@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f3f1ea">
+<meta name="robots" content="noindex">
+<title>Как Ваня скажет · Director's notes</title>
+<style>
+/* Та же система, что clan.team/deck/puma: бумажный фон, Arial, подписи капсом 12px, тонкие линейки, сетка «подпись слева / контент справа». */
+:root{--bg:#f3f1ea;--fg:#101010;--muted:#69675f;--line:rgba(16,16,16,.18);--tile:#dcd9d0;--hi:#e9ff00;--pad:clamp(18px,3vw,44px)}
+*{box-sizing:border-box}html{background:var(--bg);color:var(--fg);font-family:Arial,Helvetica,sans-serif;-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--bg)}a{color:inherit;text-decoration:none;border-bottom:1px solid currentColor}a:hover{opacity:.55}
+a:focus-visible{outline:2px solid var(--fg);outline-offset:3px}
+.cta{display:inline-block;background:var(--fg);color:var(--bg);border:1px solid var(--fg);padding:12px 16px;font-size:12px;text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}.cta.ghost{background:transparent;color:var(--fg)}.cta:hover{opacity:.75}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}
+main{min-height:100svh;padding:var(--pad);display:flex;flex-direction:column}
+.top{display:flex;justify-content:space-between;gap:20px;font-size:12px;text-transform:uppercase;letter-spacing:.06em}
+.hero{padding:clamp(70px,12vh,150px) 0 clamp(40px,7vh,90px)}
+h1{font-size:clamp(58px,12.5vw,210px);line-height:.86;letter-spacing:-.07em;font-weight:500;margin:0}
+h1 .x{color:var(--muted)}
+.kicker{font-size:clamp(22px,3.2vw,50px);line-height:1.02;letter-spacing:-.035em;max-width:1150px;margin:28px 0 0;text-wrap:balance}
+.grid{border-top:1px solid var(--line);display:grid;grid-template-columns:minmax(120px,.7fr) minmax(0,2.3fr);gap:var(--pad);padding:22px 0 64px;scroll-margin-top:16px}
+.label{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.label .sub{display:block;margin-top:18px;text-transform:none;letter-spacing:0;font-size:13px;line-height:1.35}
+.meta{margin:0;display:grid;gap:10px;align-content:start}.meta dt{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}.meta dd{margin:2px 0 0;font-size:15px;line-height:1.3}
+.copy{font-size:clamp(20px,2.15vw,34px);line-height:1.13;letter-spacing:-.025em;max-width:1050px}.copy p{margin:0 0 1em}.copy p:last-child{margin-bottom:0}
+.copy.small{font-size:clamp(17px,1.5vw,22px);line-height:1.25;letter-spacing:-.01em}
+mark{background:var(--hi);color:inherit;padding:0 .08em}
+
+/* хронометраж: полоса 30 секунд */
+.time{display:flex;gap:4px;width:100%}
+.time a{border:0;display:flex;flex-direction:column;justify-content:space-between;gap:28px;min-width:0;background:var(--tile);padding:12px;min-height:118px}
+.time a:hover{opacity:1;background:var(--fg);color:var(--bg)}
+.time a:hover .s{color:var(--bg)}
+.time .n{font-size:12px;text-transform:uppercase;letter-spacing:.06em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.time .s{font-size:clamp(22px,2.6vw,40px);letter-spacing:-.04em;color:var(--muted)}
+.time a.pack{background:var(--fg);color:var(--bg)}.time a.pack .s{color:var(--bg)}
+.scale{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:8px;font-variant-numeric:tabular-nums}
+
+/* сцена */
+.case{border-top:1px solid var(--fg);display:grid;grid-template-columns:minmax(220px,.7fr) minmax(0,2.3fr);gap:var(--pad);padding:22px 0 72px;scroll-margin-top:16px}
+.case-meta{display:flex;flex-direction:column;gap:18px;min-width:0}
+.case .no{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:flex;justify-content:space-between;gap:12px}
+.case h2{font-size:clamp(36px,4.3vw,72px);overflow-wrap:anywhere;line-height:.9;letter-spacing:-.055em;font-weight:500;margin:0}
+.case .desc{font-size:15px;line-height:1.4;margin:0;max-width:44ch}
+.case .desc b{font-weight:400;text-transform:uppercase;font-size:12px;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:4px}
+.refs{font-size:12px;text-transform:uppercase;letter-spacing:.06em;display:flex;gap:12px;flex-wrap:wrap;color:var(--muted)}
+.refs a{color:var(--fg)}
+.shots{display:grid;grid-template-columns:1fr 1fr;gap:14px;min-width:0}
+.shot{background:#fbfaf6;border:1px solid var(--line);padding:clamp(16px,1.8vw,26px);display:flex;flex-direction:column;gap:14px;min-width:0}
+.shot .cam{display:flex;justify-content:space-between;gap:12px;font-size:12px;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--line);padding-bottom:10px}
+.shot .cam span:last-child{color:var(--muted)}
+.shot.pov .cam span:first-child::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:#e2231a;margin-right:8px;vertical-align:1px}
+.shot p{margin:0;font-size:clamp(16px,1.25vw,19px);line-height:1.35;letter-spacing:-.005em}
+.line{border-left:2px solid var(--fg);padding:2px 0 2px 14px}
+.line .who{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:4px}
+.line q{quotes:none;font-size:clamp(20px,1.9vw,30px);line-height:1.12;letter-spacing:-.03em;display:block}
+.trans{grid-column:1/-1;display:flex;gap:16px;align-items:baseline;border-top:1px solid var(--line);padding-top:12px;font-size:15px;line-height:1.35}
+.trans span:first-child{font-size:12px;text-transform:uppercase;letter-spacing:.06em;background:var(--hi);padding:3px 6px;white-space:nowrap}
+.end{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.end .shot{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.end .shot .cam{border-color:rgba(243,241,234,.25)}.end .shot .cam span:last-child{color:#a9a69c}
+.end .line{border-color:var(--bg)}.end .line .who{color:#a9a69c}
+
+/* референсы */
+.gallery{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.card{margin:0;scroll-margin-top:16px}
+.card video{display:block;width:100%;height:auto;aspect-ratio:640/326;object-fit:cover;background:var(--tile)}
+.card figcaption{display:flex;justify-content:space-between;gap:12px;padding:8px 0 4px;font-size:12px;text-transform:uppercase;letter-spacing:.06em}
+.card figcaption span:last-child{color:var(--muted);text-transform:none;letter-spacing:0;text-align:right}
+.card:target video{outline:3px solid var(--fg);outline-offset:3px}
+
+/* как снимать */
+.how{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 var(--pad)}
+.how div{border-top:1px solid var(--line);padding:14px 0 26px}
+.how h3{margin:0 0 10px;font-size:12px;font-weight:400;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.how p{margin:0;font-size:clamp(17px,1.5vw,22px);line-height:1.25;letter-spacing:-.01em}
+
+footer{margin-top:auto;border-top:1px solid var(--line);padding-top:18px;display:flex;justify-content:space-between;gap:20px;font-size:12px;text-transform:uppercase;letter-spacing:.05em}
+@media(max-width:1000px){.gallery{grid-template-columns:repeat(2,minmax(0,1fr))}.shots,.end{grid-template-columns:1fr}}
+@media(max-width:800px){.case{grid-template-columns:1fr;gap:18px;padding-bottom:52px}.how{grid-template-columns:1fr}}
+@media(max-width:700px){.top{font-size:10px}.top span:nth-child(2){display:none}.grid{grid-template-columns:1fr;gap:16px;padding-bottom:46px}.copy{font-size:21px}.kicker{font-size:26px}
+  .time{flex-wrap:wrap}.time .n{white-space:normal}.time a{flex:1 1 30%!important;min-height:84px;gap:14px}.scale{display:none}footer{flex-direction:column}.trans{flex-direction:column;gap:8px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body><main>
+<div class="top"><a href="https://shavkero.com/">Anton Shavkero</a><span>Director's notes</span><span>Сбер · ГигаЧат, 2026</span></div>
+
+<section class="hero">
+  <h1>Как Ваня <span class="x">скажет</span></h1>
+  <p class="kicker">Ролик на 30 секунд про войсмод ГигаЧата с голосом Вани Дмитриенко. Снимаем двумя камерами: от лица телефона и со стороны.</p>
+  <div class="hero-actions"><a class="cta" href="#scenes">Сцены</a><a class="cta ghost" href="#refs">Референсы</a><a class="cta ghost" href="#how">Как снимать</a></div>
+</section>
+
+<section class="grid">
+  <dl class="meta">
+    <div><dt>Клиент</dt><dd>Сбер, ГигаЧат</dd></div>
+    <div><dt>Продукт</dt><dd>Войсмод с голосом Вани Дмитриенко</dd></div>
+    <div><dt>Хронометраж</dt><dd>30 сек</dd></div>
+    <div><dt>Режиссёр</dt><dd>Антон Шавкеро</dd></div>
+    <div><dt>Студия</dt><dd>CLAN</dd></div>
+  </dl>
+  <div class="copy">
+    <p>Каждая сцена снята двумя камерами.</p>
+    <p><b>Вопрос</b> героя снимаем от лица телефона. Герой держит телефон или кладёт его рядом и говорит в него. Камера двигается вместе с ним: давка, наклон, поворот кресла. Движения идут из действия сцены.</p>
+    <p><b>Ответ</b> Вани снимаем со стороны статичной камерой. <mark>Голова Вани стоит ровно в той точке, где закончился предыдущий кадр:</mark> где оказался телефон, там и лицо Вани. Лицо крупно на переднем плане, герой рядом или за ним.</p>
+    <p>В финале Ваня со стороны, в руке телефон с открытым интерфейсом ГигаЧата.</p>
+  </div>
+</section>
+
+<section class="grid" style="padding-bottom:40px">
+  <div class="label">Переходы</div>
+  <div class="copy small">
+    <p>Сцены склеиваются через объектив: капля с мокрого свитера, запотевшее стекло, накидка барбера, стакан кофе. Без графики, как в брифе.</p>
+  </div>
+</section>
+
+<section class="grid" id="scenes">
+  <div class="label">Хронометраж</div>
+  <div>
+    <div class="time">
+      <a href="#s1" style="flex:9"><span class="n">1 · Квартира</span><span class="s">9 с</span></a>
+      <a href="#s2" style="flex:7"><span class="n">2 · Автобус</span><span class="s">7 с</span></a>
+      <a href="#s3" style="flex:6"><span class="n">3 · Барбершоп</span><span class="s">6 с</span></a>
+      <a href="#s4" style="flex:4"><span class="n">4 · Гримёрка</span><span class="s">4 с</span></a>
+      <a href="#s4" style="flex:4" class="pack"><span class="n">Пэкшот</span><span class="s">4 с</span></a>
+    </div>
+    <div class="scale"><span>0</span><span>9</span><span>16</span><span>22</span><span>26</span><span>30 сек</span></div>
+  </div>
+</section>
+
+<!-- 1 -->
+<section class="case" id="s1">
+  <div class="case-meta">
+    <div class="no"><span>Сцена 1</span><span>~9 сек</span></div>
+    <h2>Квартира</h2>
+    <p class="desc"><b>Место</b>Квартира, стиральная машина. Белый кот Беляш.</p>
+    <div class="refs">Реф <a href="#ref2">2</a><a href="#ref3">3</a><a href="#ref6">6</a></div>
+  </div>
+  <div class="shots">
+    <div class="shot pov">
+      <div class="cam"><span>POV · вопрос</span><span>от телефона</span></div>
+      <p>Парень у стиральной машины, портрет крупно. Одной рукой держит телефон, другой лезет в барабан и тянет мокрый свитер, тот застрял.</p>
+      <p>Вытягивает. Кладёт телефон на пол экраном вверх и разворачивает над ним севший свитер: снизу видим свитер и лицо парня над ним. Свитер сел так, что теперь впору коту.</p>
+      <div class="line"><span class="who">Парень, в телефон</span><q>Ну и что мне теперь с этим делать?</q></div>
+    </div>
+    <div class="shot">
+      <div class="cam"><span>Ответ</span><span>средне-общий, камера у пола</span></div>
+      <p>На переднем плане крупно лицо Вани: он лежит на полу ровно там, где лежит телефон, и жамкает белого кота на груди. Смотрит снизу на парня. За ним парень со свитером и стиралка.</p>
+      <div class="line"><span class="who">Ваня</span><q>Скажу честно, Беляшу он теперь подходит больше</q></div>
+      <p>Беляш мурлычет от удовольствия. Парень переводит взгляд со свитера на кота и закатывает глаза.</p>
+    </div>
+    <div class="trans"><span>Переход</span><span>Парень встряхивает свитер перед камерой, капля попадает в объектив.</span></div>
+  </div>
+</section>
+
+<!-- 2 -->
+<section class="case" id="s2">
+  <div class="case-meta">
+    <div class="no"><span>Сцена 2</span><span>~7 сек</span></div>
+    <h2>Автобус</h2>
+    <p class="desc"><b>Погода</b>За окнами ливень: вода идёт по стёклам сплошным слоем, огни улицы размыты. Все мокрые, в плащах, с капюшонов капает.</p>
+    <div class="refs">Реф <a href="#ref1">1</a><a href="#ref8">8</a><a href="#ref7">7</a></div>
+  </div>
+  <div class="shots">
+    <div class="shot pov">
+      <div class="cam"><span>POV · вопрос</span><span>от телефона</span></div>
+      <p>Телефон у столба поручня с красной кнопкой «стоп». Девушка держит в руках гору конспектов и учебников и пытается удержать телефон длинными ногтями, он выскальзывает, кадр дёргается.</p>
+      <p>Двери открываются, входит толпа и заталкивает её глубже в салон, битком. Мокрые плащи проходят вплотную к объективу. Она поднимает телефон чуть над собой, чтобы его не раздавили, и в сердцах, но шёпотом говорит в него снизу вверх.</p>
+      <div class="line"><span class="who">Девушка, в телефон</span><q>У меня к тебе столько вопросов… Но до зачета 20 минут</q></div>
+    </div>
+    <div class="shot">
+      <div class="cam"><span>Ответ</span><span>средне-крупный, полуверхняя точка</span></div>
+      <p>Ракурс с другой стороны. Лицо Вани там, где в конце был телефон, над её плечом, вплотную к ней: мокрые локоны, влажное лицо. Отвечает тихо, почти на ухо.</p>
+      <div class="line"><span class="who">Ваня</span><q>А если подскажу, как выучить все билеты за пять остановок?</q></div>
+      <p>У девушки загораются глаза, она выдыхает.</p>
+    </div>
+    <div class="trans"><span>Переход</span><span>В духоте битком набитого автобуса запотевает объектив камеры.</span></div>
+  </div>
+</section>
+
+<!-- 3 -->
+<section class="case" id="s3">
+  <div class="case-meta">
+    <div class="no"><span>Сцена 3</span><span>~6 сек</span></div>
+    <h2>Барбершоп</h2>
+    <p class="desc"><b>Интерьер</b>Стены и мебель в дереве, на полу плитка.</p>
+    <div class="refs">Реф <a href="#ref4">4</a><a href="#ref1">1</a><a href="#ref6">6</a></div>
+  </div>
+  <div class="shots">
+    <div class="shot pov">
+      <div class="cam"><span>POV · вопрос</span><span>от телефона</span></div>
+      <p>Палец вытирает запотевший объектив фронтальной камеры телефона. Парень в кресле, держит телефон перед собой как зеркало. Барбер разворачивает кресло, кадр проворачивается вместе с ним.</p>
+      <p>Парень поднимает телефон, разглядывает нелепую чёлку, приглаживает её, она снова встаёт. Сдаётся и опускает руку с телефоном низко сбоку, на уровень плеча, к соседнему креслу.</p>
+      <div class="line"><span class="who">Парень, шёпотом, в телефон</span><q>А это вообще отрастёт?</q></div>
+    </div>
+    <div class="shot">
+      <div class="cam"><span>Ответ</span><span>статика сбоку, на уровне кресла</span></div>
+      <p>Ваня в соседнем кресле как клиент: пена на лице, полотенце на шее. Барбер откинул его кресло для бритья, и голова Вани оказывается ровно там, где был телефон, рядом с головой парня с чёлкой.</p>
+      <div class="line"><span class="who">Ваня, тихо</span><q>Могу сказать, где купить крутую кепку</q></div>
+      <p>Парень, не глядя на Ваню, поднимает бровь, словно идея ему зашла. Барбер возвращается с бритвой.</p>
+    </div>
+    <div class="trans"><span>Переход</span><span>Барбер встряхивает накидку перед камерой, ткань закрывает кадр.</span></div>
+  </div>
+</section>
+
+<!-- 4 -->
+<section class="case" id="s4">
+  <div class="case-meta">
+    <div class="no"><span>Сцена 4</span><span>~4 сек + пэкшот 4 сек</span></div>
+    <h2>Гримёрка</h2>
+    <p class="desc"><b>Интерьер</b>Гримёрка вся в зеркалах на всю стену, с лампами.</p>
+    <div class="refs">Реф <a href="#ref5">5</a></div>
+  </div>
+  <div class="shots">
+    <div class="shot pov">
+      <div class="cam"><span>POV · вопрос</span><span>от телефона</span></div>
+      <p>Кадр открывается из-за бумажного стакана кофе: он перекрывает Ваню целиком. Ваня отводит стакан, видно лицо. В одной руке кофе, в другой телефон, поэтому с ГигаЧатом он говорит голосом. Ваня подходит к гримёрному креслу, начинает садиться.</p>
+      <div class="line"><span class="who">Ваня, в телефон</span><q>ГигаЧат, почему все вокруг благодарят меня за советы?</q></div>
+    </div>
+    <div class="shot">
+      <div class="cam"><span>Ответ</span><span>статика со стороны</span></div>
+      <p>Ваня садится в кресло. Одной рукой ставит кофе на стол перед собой, в другой телефон экраном к нам: <mark>открыт голосовой режим ГигаЧата</mark>.</p>
+      <div class="line"><span class="who">ГигаЧат голосом Вани</span><q>А это ты мне скажи</q></div>
+      <p>Ваня удивлённо смотрит на телефон, затем в камеру.</p>
+    </div>
+    <div class="end">
+      <div class="shot">
+        <div class="cam"><span>ГЗК</span><span>поверх финала</span></div>
+        <div class="line"><span class="who">Голос за кадром</span><q>Новый войсмод с голосом Вани Дмитриенко — уже в твоём ИИ-помощнике</q></div>
+      </div>
+      <div class="shot">
+        <div class="cam"><span>Пэкшот</span><span>4 сек</span></div>
+        <p>Телефон крупно, голосовой режим ГигаЧата.</p>
+        <div class="line"><span class="who">Слоган</span><q>ГигаЧат — всё как Ваня скажет</q></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="grid" id="refs">
+  <div class="label">Референсы<span class="sub">CK One #ckmeforme. Как камера-телефон живёт в руках и как выглядит статика со стороны.</span></div>
+  <div class="gallery">
+    <figure class="card" id="ref1"><video data-src="./media/ref-1.mp4" poster="./media/ref-1.jpg" muted loop playsinline preload="none"></video><figcaption><span>01</span><span>рука закрывает объектив</span></figcaption></figure>
+    <figure class="card" id="ref2"><video data-src="./media/ref-2.mp4" poster="./media/ref-2.jpg" muted loop playsinline preload="none"></video><figcaption><span>02</span><span>смотрят сверху в телефон</span></figcaption></figure>
+    <figure class="card" id="ref3"><video data-src="./media/ref-3.mp4" poster="./media/ref-3.jpg" muted loop playsinline preload="none"></video><figcaption><span>03</span><span>снизу, двое над телефоном</span></figcaption></figure>
+    <figure class="card" id="ref4"><video data-src="./media/ref-4.mp4" poster="./media/ref-4.jpg" muted loop playsinline preload="none"></video><figcaption><span>04</span><span>рука у объектива</span></figcaption></figure>
+    <figure class="card" id="ref5"><video data-src="./media/ref-5.mp4" poster="./media/ref-5.jpg" muted loop playsinline preload="none"></video><figcaption><span>05</span><span>гримёрка, зеркало с лампами</span></figcaption></figure>
+    <figure class="card" id="ref6"><video data-src="./media/ref-6.mp4" poster="./media/ref-6.jpg" muted loop playsinline preload="none"></video><figcaption><span>06</span><span>статика на всю комнату</span></figcaption></figure>
+    <figure class="card" id="ref7"><video data-src="./media/ref-7.mp4" poster="./media/ref-7.jpg" muted loop playsinline preload="none"></video><figcaption><span>07</span><span>статика сверху</span></figcaption></figure>
+    <figure class="card" id="ref8"><video data-src="./media/ref-8.mp4" poster="./media/ref-8.jpg" muted loop playsinline preload="none"></video><figcaption><span>08</span><span>снизу, из руки</span></figcaption></figure>
+  </div>
+</section>
+
+<section class="grid" id="how">
+  <div class="label">Как снимать</div>
+  <div class="how">
+    <div><h3>POV</h3><p>Камера размером с телефон (смартфон или экшн-камера в корпусе телефона) в руке актёра. Актёр сам держит и двигает её. Широкий объектив, лицо близко. Движения: портрет у стиралки и телефон на пол, давка в автобусе и телефон над головой, поворот кресла.</p></div>
+    <div><h3>Ответы</h3><p>Штатив. Точку ставим от конца POV-кадра: где оказался телефон, туда кладём голову Вани. Лицо Вани крупно на переднем плане, герой рядом или за ним. Квартира от пола, автобус с полуверхней точки, барбершоп сбоку на уровне откинутого кресла. Между POV и ответом прямая склейка на реплике.</p></div>
+    <div><h3>Автобус</h3><p>Ливень за окнами: дождевальная установка снаружи, автобус стоит на площадке, качку даём раскачкой корпуса. Массовка в мокрых плащах, плащи и волосы мочим перед каждым дублем.</p></div>
+    <div><h3>Переходы</h3><p>Делаем практически на статике: капля из пульверизатора на объектив, запотевание паром. Следующий POV начинается с того же: палец вытирает запотевший объектив.</p></div>
+    <div><h3>Дубли</h3><p>Каждую сцену снимаем одним-двумя длинными дублями POV и одним статичным планом.</p></div>
+  </div>
+</section>
+
+<footer><span>Anton Shavkero · Director's notes</span><span>Как Ваня скажет · 2026</span></footer>
+</main>
+<script>
+// Лупы референсов грузятся и играют только на экране.
+var vids = document.querySelectorAll('video[data-src]');
+var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function start(v) { if (!v.src) v.src = v.dataset.src; var p = v.play(); if (p) p.catch(function () {}); }
+if (!reduce) {
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) start(e.target); else e.target.pause(); });
+    }, { rootMargin: '200px 0px' });
+    vids.forEach(function (v) { io.observe(v); });
+  } else vids.forEach(start);
+}
+</script>
+</body></html>
