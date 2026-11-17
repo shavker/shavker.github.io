@@ -37,7 +37,7 @@ def top(page):
 slides = []
 slides.append(f'<section class="slide s-title">{top("01")}<div class="inner">{hero}{meta}</div></section>')
 gal = "".join(f'<img src="{(DECK / "media" / r).as_uri()}">' for r in refs)
-slides.append(f'<section class="slide s-idea">{top("02")}<div class="inner"><div class="col"><div class="label">Идея съёмки</div>{copy}</div><div class="col"><div class="label">Референсы</div><div class="gal">{gal}</div></div></div></section>')
+slides.append(f'<section class="slide s-idea">{top("02")}<div class="inner"><div class="col"><div class="label">Идея съёмки</div>{copy}</div><div class="col"><div class="label">Референсы</div><div class="gal{' g8' if len(refs)>4 else ''}">{gal}</div></div></div></section>')
 n = 3
 for sid in ["s1", "s2", "s3", "s4"]:
     body = by_id(sid)
@@ -81,7 +81,7 @@ q{quotes:none}
 .meta dt{font-size:15px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}.meta dd{margin:6px 0 0;font-size:22px}
 .s-idea .inner{display:grid;grid-template-columns:600px 1fr;gap:64px}.s-idea .col:last-child{display:flex;flex-direction:column;min-height:0}
 .s-idea .copy{font-size:28px;line-height:1.18;letter-spacing:-.02em}.s-idea .copy p{margin:0 0 .8em}
-.gal{flex:1;min-height:0;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:14px}.gal img{width:100%;height:100%;object-fit:cover;display:block;background:var(--tile)}
+.gal{flex:1;min-height:0;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:14px}.gal.g8{grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(2,1fr)}.gal img{width:100%;height:100%;object-fit:cover;display:block;background:var(--tile)}
 .case{display:grid;grid-template-columns:400px 1fr;gap:56px}
 .case-meta{display:flex;flex-direction:column;gap:22px}
 .case .no{display:flex;justify-content:space-between;font-size:16px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
