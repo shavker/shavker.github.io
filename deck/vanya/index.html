@@ -92,6 +92,8 @@ footer{margin-top:auto;border-top:1px solid var(--line);padding-top:18px;display
 @media(max-width:700px){.top{font-size:10px}.top span:nth-child(2){display:none}.grid{grid-template-columns:1fr;gap:16px;padding-bottom:46px}.copy{font-size:21px}.kicker{font-size:26px}
   .time{flex-wrap:wrap}.time .n{white-space:normal}.time a{flex:1 1 30%!important;min-height:84px;gap:14px}.scale{display:none}footer{flex-direction:column}.trans{flex-direction:column;gap:8px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+.light{display:grid;gap:28px}.light-row{display:grid;grid-template-columns:160px 1fr;gap:24px;align-items:start}.light-name{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);border-top:1px solid var(--line);padding-top:10px}.light-imgs{display:flex;gap:14px}.light-imgs figure{margin:0;min-width:0}.light-imgs img{display:block;width:100%;height:auto;object-fit:cover;background:var(--tile)}
+@media(max-width:800px){.light-row{grid-template-columns:1fr;gap:10px}.light-imgs{gap:8px}}
 </style>
 </head>
 <body><main>
@@ -100,7 +102,7 @@ footer{margin-top:auto;border-top:1px solid var(--line);padding-top:18px;display
 <section class="hero">
   <h1>Как Ваня <span class="x">скажет</span></h1>
   <p class="kicker">Ролик на 30 секунд про войсмод ГигаЧата с голосом Вани Дмитриенко. Снимаем двумя камерами: от лица телефона и со стороны.</p>
-  <div class="hero-actions"><a class="cta" href="#s1">Сцены</a><a class="cta ghost" href="#refs">Референсы</a><a class="cta ghost" href="#how">Как снимать</a><a class="cta ghost" href="./vanya-directors-notes.pdf?v=202611171810" download="Как Ваня скажет · Director's notes.pdf">Скачать PDF</a></div>
+  <div class="hero-actions"><a class="cta" href="#s1">Сцены</a><a class="cta ghost" href="#refs">Референсы</a><a class="cta ghost" href="#how">Как снимать</a><a class="cta ghost" href="./vanya-directors-notes.pdf?v=202611171904" download="Как Ваня скажет · Director's notes.pdf">Скачать PDF</a></div>
 </section>
 
 <section class="grid">
@@ -245,6 +247,16 @@ footer{margin-top:auto;border-top:1px solid var(--line);padding-top:18px;display
   </div>
 </section>
 
+
+<section class="grid" id="light">
+  <div class="label">Свет</div>
+  <div class="light">
+    <div class="light-row"><div class="light-name">Квартира</div><div class="light-imgs"><figure style="flex:0.667 1 0"><img src="./media/light/l1.jpg" alt="Квартира, свет" loading="lazy" style="aspect-ratio:667/1000"></figure><figure style="flex:0.733 1 0"><img src="./media/light/l2.jpg" alt="Квартира, свет" loading="lazy" style="aspect-ratio:733/1000"></figure></div></div>
+    <div class="light-row"><div class="light-name">Автобус</div><div class="light-imgs"><figure style="flex:0.562 1 0"><img src="./media/light/l3.jpg" alt="Автобус, свет" loading="lazy" style="aspect-ratio:562/1000"></figure><figure style="flex:0.666 1 0"><img src="./media/light/l4.jpg" alt="Автобус, свет" loading="lazy" style="aspect-ratio:666/1000"></figure><figure style="flex:0.750 1 0"><img src="./media/light/l5.jpg" alt="Автобус, свет" loading="lazy" style="aspect-ratio:750/1000"></figure><figure style="flex:1.000 1 0"><img src="./media/light/l6.jpg" alt="Автобус, свет" loading="lazy" style="aspect-ratio:1000/1000"></figure></div></div>
+    <div class="light-row"><div class="light-name">Барбершоп</div><div class="light-imgs"><figure style="flex:0.666 1 0"><img src="./media/light/l7.jpg" alt="Барбершоп, свет" loading="lazy" style="aspect-ratio:666/1000"></figure><figure style="flex:1.000 1 0"><img src="./media/light/l8.jpg" alt="Барбершоп, свет" loading="lazy" style="aspect-ratio:1000/1000"></figure><figure style="flex:0.806 1 0"><img src="./media/light/l9.jpg" alt="Барбершоп, свет" loading="lazy" style="aspect-ratio:806/1000"></figure></div></div>
+    <div class="light-row"><div class="light-name">Гримёрка</div><div class="light-imgs"><figure style="flex:0.562 1 0"><img src="./media/light/l10.jpg" alt="Гримёрка, свет" loading="lazy" style="aspect-ratio:562/1000"></figure><figure style="flex:0.800 1 0"><img src="./media/light/l11.jpg" alt="Гримёрка, свет" loading="lazy" style="aspect-ratio:800/1000"></figure></div></div>
+  </div>
+</section>
 
 <section class="grid" id="how">
   <div class="label">Как снимать</div>
