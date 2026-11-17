@@ -49,7 +49,18 @@ for sid in ["s1", "s2", "s3", "s4"]:
         figs = re.sub(r'</?a[^>]*>', '', figs)
     cm = re.search(r'<div class="case-meta">.*?</div>\s*(?=<div class="shots">)', body, re.S).group(0)
     sh = body[body.index('<div class="shots">'):]
-    slides.append(f'<section class="slide s-case">{top(f"{n:02d}")}<div class="inner sc"><div class="lc"><div class="strip{' many' if figs.count('<figure')>4 else ''}">{figs}</div>{cm}</div><div class="rc">{sh}</div></div></section>')
+    fl = re.findall(r'<figure>.*?</figure>', figs, re.S)
+    if len(fl) > 4:
+        # Длинная сцена: два слайда. Первый — первые 2 кадра и 2 карточки, второй — остальное.
+        inner = sh[len('<div class="shots">'):sh.rindex('</div>')]
+        parts = re.split(r'(?=\n\s*<div class="(?:shot|end)[ "])', inner)
+        parts = [x for x in parts if x.strip()]
+        groups = [(fl[:2], parts[:2], ' n1'), (fl[2:], parts[2:], ' n3')]
+        for fg, pp, cls in groups:
+            slides.append(f'<section class="slide s-case split{cls}">{top(f"{n:02d}")}<div class="inner sc"><div class="lc"><div class="strip{cls}">{"".join(fg)}</div>{cm}</div><div class="rc"><div class="shots">{"".join(pp)}</div></div></div></section>')
+            n += 1
+        continue
+    slides.append(f'<section class="slide s-case">{top(f"{n:02d}")}<div class="inner sc"><div class="lc"><div class="strip">{figs}</div>{cm}</div><div class="rc">{sh}</div></div></section>')
     n += 1
 slides.append(f'<section class="slide s-how">{top(f"{n:02d}")}<div class="inner"><div class="label">Как снимать</div>{how}</div></section>')
 
@@ -92,7 +103,7 @@ q{quotes:none}
 .s-sb .inner{padding-top:24px}
 .sc{display:grid;grid-template-columns:1060px 1fr;gap:40px}.lc{display:flex;flex-direction:column;gap:26px;min-width:0}.rc{min-width:0}.rc .shots{grid-template-columns:1fr;gap:12px}.rc .end{grid-template-columns:1fr 1fr}.sc .case-meta{display:grid;grid-template-columns:auto 1fr;gap:6px 40px;align-items:end}.sc .case-meta .no{grid-column:1/-1}.sc .case-meta .desc{max-width:420px}
 .strip{display:grid;grid-template-columns:1fr 1fr;gap:16px 16px}.strip figure{margin:0;position:relative;min-width:0}.strip img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;background:var(--tile)}
-.strip.many{grid-template-columns:repeat(4,1fr);gap:12px 10px}.strip.many figcaption{font-size:10px}.strip figcaption{display:flex;justify-content:space-between;gap:8px;padding:6px 0 0;font-size:12px;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap;overflow:hidden}.strip figcaption span:last-child{color:var(--muted);text-transform:none;letter-spacing:0;overflow:hidden;text-overflow:ellipsis}
+.s-case.split .inner{font-size:26px}.split .rc .shots{gap:20px}.split .shot{padding:26px;gap:14px}.split .strip figcaption{font-size:14px}.s-case.split.n1 .sc{grid-template-columns:1fr;grid-template-rows:auto 1fr;gap:30px}.s-case.split.n1 .lc{display:grid;grid-template-columns:1fr 400px;gap:40px;align-items:end}.s-case.split.n1 .inner{font-size:30px}.strip.n1{grid-template-columns:1fr 1fr;gap:16px}.s-case.split.n1 .case-meta{grid-template-columns:1fr;align-self:end}.s-case.split.n1 .case-meta .desc{max-width:none}.s-case.split.n1 .rc .shots{grid-template-columns:1fr 1fr;align-items:stretch}.strip.n3{grid-template-columns:repeat(3,1fr);gap:14px 12px}.strip figcaption{display:flex;justify-content:space-between;gap:8px;padding:6px 0 0;font-size:12px;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap;overflow:hidden}.strip figcaption span:last-child{color:var(--muted);text-transform:none;letter-spacing:0;overflow:hidden;text-overflow:ellipsis}
 .strip .pov{position:absolute;left:10px;top:10px;background:var(--bg);padding:5px 9px;font-size:13px;text-transform:uppercase;letter-spacing:.06em;line-height:1}.strip .pov::before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;background:#e2231a;margin-right:7px}
 .s-case .inner{padding-top:28px;font-size:19px}.s-case h2{font-size:84px;line-height:.9;letter-spacing:-.055em;font-weight:500;margin:0}.s-case .no{display:flex;justify-content:space-between;font-size:15px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}.s-case .desc{font-size:18px;line-height:1.35;margin:0}.s-case .desc b{display:block;font-weight:400;font-size:14px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:4px}.s-case .shot{padding:18px;gap:10px}
 .s-how .how{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0 48px}
