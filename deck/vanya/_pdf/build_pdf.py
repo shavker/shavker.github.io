@@ -125,4 +125,10 @@ with tempfile.TemporaryDirectory() as td:
     p.write_text(html)
     subprocess.run([CHROME, "--headless=new", "--disable-gpu", "--no-pdf-header-footer", "--virtual-time-budget=4000",
                     f"--print-to-pdf={OUT}", p.as_uri()], check=True, capture_output=True)
-print(OUT, OUT.stat().st_size)
+# Метка версии в ссылке «Скачать PDF», чтобы браузер не отдавал старый файл из кэша.
+import time
+v = time.strftime("%Y%m%d%H%M")
+page = (DECK / "index.html").read_text()
+page = re.sub(r'(\./vanya-directors-notes\.pdf)(\?v=\d+)?', r'\1?v=' + v, page)
+(DECK / "index.html").write_text(page)
+print(OUT, OUT.stat().st_size, "v=" + v)
