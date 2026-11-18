@@ -94,7 +94,7 @@ footer{margin-top:auto;border-top:1px solid var(--line);padding-top:18px;display
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 .light{display:grid;gap:28px}.light-row{display:grid;grid-template-columns:160px minmax(0,1fr);gap:24px;align-items:start}.light-name{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);border-top:1px solid var(--line);padding-top:10px}.light-imgs{display:flex;gap:14px;height:min(22vw,320px);overflow-x:auto;scrollbar-width:none}.light-imgs figure{margin:0;flex:none!important;height:100%}.light-imgs img{display:block;height:100%;width:auto;background:var(--tile)}
 @media(max-width:800px){.light-row{grid-template-columns:1fr;gap:10px}.light-imgs{gap:8px;height:44vw;overflow-x:auto}}
-.light-row{container-type:inline-size}#light .light-imgs{height:min(320px,calc((100cqw - 226px)/3))}#decor .light-imgs{height:min(280px,calc((100cqw - 226px)/4))}@media(max-width:800px){#light .light-imgs,#decor .light-imgs{height:44vw}}.decor-body{min-width:0}.decor-lead{max-width:760px;margin:0 0 28px;font-size:17px;line-height:1.5}.decor-note{margin:8px 0 0;font-size:13px;line-height:1.45;text-transform:none;letter-spacing:0;color:var(--muted)}</style>
+.light-row{container-type:inline-size}#light .light-imgs{height:min(320px,calc((100cqw - 226px)/3))}#decor .light-imgs{height:min(280px,calc((100cqw - 226px)/4))}@media(max-width:800px){#light .light-imgs,#decor .light-imgs{height:44vw}}.decor-body{min-width:0}.decor-lead{max-width:760px;margin:0 0 28px;font-size:17px;line-height:1.5}.decor-note{margin:8px 0 0;font-size:13px;line-height:1.45;text-transform:none;letter-spacing:0;color:var(--muted)}#lb{position:fixed;inset:0;z-index:9999;background:rgba(10,10,10,.92);display:none;align-items:center;justify-content:center;cursor:zoom-out;touch-action:pan-y}#lb.on{display:flex}#lb img{max-width:96vw;max-height:92vh;object-fit:contain;box-shadow:0 10px 40px rgba(0,0,0,.5)}#lb .nav{position:absolute;top:0;bottom:0;width:18vw;display:flex;align-items:center;justify-content:center;color:#fff;font-size:42px;opacity:.6;cursor:pointer;user-select:none}#lb .nav:hover{opacity:1}#lb .prev{left:0}#lb .next{right:0}#lb .x{position:absolute;top:14px;right:20px;color:#fff;font-size:34px;line-height:1;cursor:pointer;opacity:.8}main img,section img{cursor:zoom-in}</style>
 </head>
 <body><main>
 <div class="top"><a href="https://shavkero.com/">Anton Shavkero</a><span>Director's notes</span><span>ГигаЧат, 2026</span></div>
@@ -298,4 +298,15 @@ if (!reduce) {
   } else vids.forEach(start);
 }
 </script>
+<div id="lb"><span class="nav prev">‹</span><img alt=""><span class="nav next">›</span><span class="x">×</span></div>
+<script>(function(){const lb=document.getElementById('lb'),im=lb.querySelector('img');let list=[],k=0;
+const all=()=>[...document.querySelectorAll('section img')].filter(i=>!i.closest('#lb'));
+const src=i=>{const a=i.closest('a');return a&&/\.(jpe?g|png|webp)$/i.test(a.getAttribute('href')||'')?a.href:(i.currentSrc||i.src)};
+const show=n=>{k=(n+list.length)%list.length;im.src=src(list[k]);};
+document.addEventListener('click',e=>{const i=e.target.closest('img');if(!i||i.closest('#lb')||!i.closest('section'))return;e.preventDefault();list=all();show(list.indexOf(i));lb.classList.add('on');document.body.style.overflow='hidden';});
+const close=()=>{lb.classList.remove('on');document.body.style.overflow='';im.removeAttribute('src');};
+lb.addEventListener('click',e=>{if(e.target.classList.contains('prev')){show(k-1);return}if(e.target.classList.contains('next')){show(k+1);return}close();});
+document.addEventListener('keydown',e=>{if(!lb.classList.contains('on'))return;if(e.key==='Escape')close();if(e.key==='ArrowRight')show(k+1);if(e.key==='ArrowLeft')show(k-1);});
+let x0=null;lb.addEventListener('touchstart',e=>{x0=e.touches[0].clientX},{passive:true});lb.addEventListener('touchend',e=>{if(x0===null)return;const d=e.changedTouches[0].clientX-x0;x0=null;if(Math.abs(d)>50){e.preventDefault();show(k+(d<0?1:-1));}});
+})();</script>
 </body></html>
