@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f3f1ea">
+<meta name="robots" content="noindex">
+<title>TORNADO · Director's notes</title>
+<style>
+/* Та же система, что clan.team/deck/puma: бумажный фон, Arial, подписи капсом 12px, тонкие линейки, сетка «подпись слева / контент справа». */
+:root{--bg:#f3f1ea;--fg:#101010;--muted:#69675f;--line:rgba(16,16,16,.18);--tile:#dcd9d0;--hi:#e9ff00;--pad:clamp(18px,3vw,44px)}
+*{box-sizing:border-box}html{background:var(--bg);color:var(--fg);font-family:Arial,Helvetica,sans-serif;-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--bg)}a{color:inherit;text-decoration:none;border-bottom:1px solid currentColor}a:hover{opacity:.55}
+a:focus-visible{outline:2px solid var(--fg);outline-offset:3px}
+.cta{display:inline-block;background:var(--fg);color:var(--bg);border:1px solid var(--fg);padding:12px 16px;font-size:12px;text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}.cta.ghost{background:transparent;color:var(--fg)}.cta:hover{opacity:.75}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}
+main{min-height:100svh;padding:var(--pad);display:flex;flex-direction:column}
+.top{display:flex;justify-content:space-between;gap:20px;font-size:12px;text-transform:uppercase;letter-spacing:.06em}
+.hero{padding:clamp(70px,12vh,150px) 0 clamp(40px,7vh,90px)}
+h1{font-size:clamp(58px,12.5vw,210px);line-height:.86;letter-spacing:-.07em;font-weight:500;margin:0}
+h1 .x{color:var(--muted)}
+.kicker{font-size:clamp(22px,3.2vw,50px);line-height:1.02;letter-spacing:-.035em;max-width:1150px;margin:28px 0 0;text-wrap:balance}
+.grid{border-top:1px solid var(--line);display:grid;grid-template-columns:minmax(120px,.7fr) minmax(0,2.3fr);gap:var(--pad);padding:22px 0 64px;scroll-margin-top:16px}
+.label{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.label .sub{display:block;margin-top:18px;text-transform:none;letter-spacing:0;font-size:13px;line-height:1.35}
+.meta{margin:0;display:grid;gap:10px;align-content:start}.meta dt{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}.meta dd{margin:2px 0 0;font-size:15px;line-height:1.3}
+.copy{font-size:clamp(20px,2.15vw,34px);line-height:1.13;letter-spacing:-.025em;max-width:1050px}.copy p{margin:0 0 1em}.copy p:last-child{margin-bottom:0}
+.copy.small{font-size:clamp(17px,1.5vw,22px);line-height:1.25;letter-spacing:-.01em}
+mark{background:var(--hi);color:inherit;padding:0 .08em}
+
+/* хронометраж: полоса 30 секунд */
+.time{display:flex;gap:4px;width:100%}
+.time a{border:0;display:flex;flex-direction:column;justify-content:space-between;gap:28px;min-width:0;background:var(--tile);padding:12px;min-height:118px}
+.time a:hover{opacity:1;background:var(--fg);color:var(--bg)}
+.time a:hover .s{color:var(--bg)}
+.time .n{font-size:12px;text-transform:uppercase;letter-spacing:.06em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.time .s{font-size:clamp(22px,2.6vw,40px);letter-spacing:-.04em;color:var(--muted)}
+.time a.pack{background:var(--fg);color:var(--bg)}.time a.pack .s{color:var(--bg)}
+.scale{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:8px;font-variant-numeric:tabular-nums}
+
+/* сцена */
+.case{border-top:1px solid var(--fg);display:grid;grid-template-columns:minmax(220px,.7fr) minmax(0,2.3fr);gap:var(--pad);padding:22px 0 72px;scroll-margin-top:16px}
+.case-meta{display:flex;flex-direction:column;gap:18px;min-width:0}
+.case .no{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:flex;justify-content:space-between;gap:12px}
+.case h2{font-size:clamp(36px,4.3vw,72px);overflow-wrap:anywhere;line-height:.9;letter-spacing:-.055em;font-weight:500;margin:0}
+.case .desc{font-size:15px;line-height:1.4;margin:0;max-width:44ch}
+.case .desc b{font-weight:400;text-transform:uppercase;font-size:12px;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:4px}
+.refs{font-size:12px;text-transform:uppercase;letter-spacing:.06em;display:flex;gap:12px;flex-wrap:wrap;color:var(--muted)}
+.refs a{color:var(--fg)}
+.shots{display:grid;grid-template-columns:1fr 1fr;gap:14px;min-width:0}
+.shot{background:#fbfaf6;border:1px solid var(--line);padding:clamp(16px,1.8vw,26px);display:flex;flex-direction:column;gap:14px;min-width:0}
+.shot .cam{display:flex;justify-content:space-between;gap:12px;font-size:12px;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--line);padding-bottom:10px}
+.shot .cam span:last-child{color:var(--muted)}
+.shot.pov .cam span:first-child::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:#e2231a;margin-right:8px;vertical-align:1px}
+.shot p{margin:0;font-size:clamp(16px,1.25vw,19px);line-height:1.35;letter-spacing:-.005em}
+.line{border-left:2px solid var(--fg);padding:2px 0 2px 14px}
+.line .who{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:block;margin-bottom:4px}
+.line q{quotes:none;font-size:clamp(20px,1.9vw,30px);line-height:1.12;letter-spacing:-.03em;display:block}
+.trans{grid-column:1/-1;display:flex;gap:16px;align-items:baseline;border-top:1px solid var(--line);padding-top:12px;font-size:15px;line-height:1.35}
+.trans span:first-child{font-size:12px;text-transform:uppercase;letter-spacing:.06em;background:var(--hi);padding:3px 6px;white-space:nowrap}
+.end{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.end .shot{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.end .shot .cam{border-color:rgba(243,241,234,.25)}.end .shot .cam span:last-child{color:#a9a69c}
+.end .line{border-color:var(--bg)}.end .line .who{color:#a9a69c}
+
+.case-meta{grid-row:1/span 2}.case .sb{grid-column:2;grid-row:1;display:grid;grid-template-columns:1fr 1fr;gap:14px}.case .shots{grid-column:2}
+.case .sb figure{margin:0;min-width:0}.case .sb a{border:0;display:block;position:relative}.case .sb img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;background:var(--tile)}
+.case .sb .pov{position:absolute;left:10px;top:10px;background:var(--bg);padding:5px 9px;font-size:12px;text-transform:uppercase;letter-spacing:.06em;line-height:1}
+.case .sb .pov::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:#e2231a;margin-right:7px;vertical-align:0}
+.case .sb figcaption{display:flex;justify-content:space-between;gap:12px;padding:8px 0 0;font-size:12px;text-transform:uppercase;letter-spacing:.06em}
+.case .sb figcaption span:last-child{color:var(--muted);text-transform:none;letter-spacing:0;text-align:right}
+.case,.shots,.shot,.case-meta{min-width:0}.trans span:last-child{min-width:0;overflow-wrap:anywhere}
+@media(max-width:800px){.case-meta{grid-row:auto}.case .sb,.case .shots{grid-column:1;grid-row:auto}}
+@media(max-width:700px){.case .sb figcaption{flex-direction:column;gap:2px}.case .sb figcaption span:last-child{text-align:left}}
+/* референсы */
+.gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.card{margin:0;scroll-margin-top:16px}
+.card video{display:block;width:100%;height:auto;aspect-ratio:640/326;object-fit:cover;background:var(--tile)}
+.card figcaption{display:flex;justify-content:space-between;gap:12px;padding:8px 0 4px;font-size:12px;text-transform:uppercase;letter-spacing:.06em}
+.card figcaption span:last-child{color:var(--muted);text-transform:none;letter-spacing:0;text-align:right}
+.card:target video{outline:3px solid var(--fg);outline-offset:3px}
+
+/* как снимать */
+.how{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 var(--pad)}
+.how div{border-top:1px solid var(--line);padding:14px 0 26px}
+.how h3{margin:0 0 10px;font-size:12px;font-weight:400;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.how p{margin:0;font-size:clamp(17px,1.5vw,22px);line-height:1.25;letter-spacing:-.01em}
+
+footer{margin-top:auto;border-top:1px solid var(--line);padding-top:18px;display:flex;justify-content:space-between;gap:20px;font-size:12px;text-transform:uppercase;letter-spacing:.05em}
+@media(max-width:1000px){.shots,.end{grid-template-columns:1fr}}
+@media(max-width:800px){.case{grid-template-columns:1fr;gap:18px;padding-bottom:52px}.how{grid-template-columns:1fr}}
+@media(max-width:700px){.top{font-size:10px}.top span:nth-child(2){display:none}.grid{grid-template-columns:1fr;gap:16px;padding-bottom:46px}.copy{font-size:21px}.kicker{font-size:26px}
+  .time{flex-wrap:wrap}.time .n{white-space:normal}.time a{flex:1 1 30%!important;min-height:84px;gap:14px}.scale{display:none}footer{flex-direction:column}.trans{flex-direction:column;gap:8px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+.light{display:grid;gap:28px}.light-row{display:grid;grid-template-columns:160px minmax(0,1fr);gap:24px;align-items:start}.light-name{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);border-top:1px solid var(--line);padding-top:10px}.light-imgs{display:flex;gap:14px;height:min(22vw,320px);overflow-x:auto;scrollbar-width:none}.light-imgs figure{margin:0;flex:none!important;height:100%}.light-imgs img{display:block;height:100%;width:auto;background:var(--tile)}
+@media(max-width:800px){.light-row{grid-template-columns:1fr;gap:10px}.light-imgs{gap:8px;height:44vw;overflow-x:auto}}
+.light-row{container-type:inline-size}#light .light-imgs{height:min(320px,calc((100cqw - 226px)/3))}#decor .light-imgs{height:min(280px,calc((100cqw - 226px)/4.6))}@media(max-width:800px){#light .light-imgs,#decor .light-imgs{height:44vw}}.decor-body{min-width:0}.sf-body{container-type:inline-size}.sf-imgs{height:min(300px,calc((100cqw - 28px)/4.05))}@media(max-width:800px){.sf-imgs{height:44vw}}.decor-lead{max-width:760px;margin:0 0 28px;font-size:17px;line-height:1.5}.decor-note{margin:8px 0 0;font-size:13px;line-height:1.45;text-transform:none;letter-spacing:0;color:var(--muted)}#lb{position:fixed;inset:0;z-index:9999;background:rgba(10,10,10,.92);display:none;align-items:center;justify-content:center;cursor:zoom-out;touch-action:pan-y}#lb.on{display:flex}#lb img{max-width:96vw;max-height:92vh;object-fit:contain;box-shadow:0 10px 40px rgba(0,0,0,.5)}#lb .nav{position:absolute;top:0;bottom:0;width:18vw;display:flex;align-items:center;justify-content:center;color:#fff;font-size:42px;opacity:.6;cursor:pointer;user-select:none}#lb .nav:hover{opacity:1}#lb .prev{left:0}#lb .next{right:0}#lb .x{position:absolute;top:14px;right:20px;color:#fff;font-size:34px;line-height:1;cursor:pointer;opacity:.8}main img,section img{cursor:zoom-in}</style>
+
+
+<style>
+.shot p .fn:empty{display:none}
+.ideas{background:transparent}.ideas ol{margin:0;padding:0 0 0 1.4em;display:grid;gap:10px;font-size:clamp(15px,1.1vw,17px);line-height:1.35}
+.ideas li::marker{color:var(--muted);font-size:12px}
+.reflist{display:grid;gap:0}.reflist a{border:0;border-top:1px solid var(--line);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:20px;padding:14px 0;font-size:clamp(17px,1.5vw,22px);letter-spacing:-.01em}
+.reflist a span:last-child{color:var(--muted);font-size:15px;line-height:1.35}
+@media(max-width:700px){.reflist a{grid-template-columns:1fr;gap:4px}}
+</style>
+</head>
+<body><main>
+<div class="top"><a href="https://shavkero.com/">Anton Shavkero</a><span>Director's notes</span><span>TORNADO, 2026</span></div>
+
+<section class="hero">
+  <h1>Энергия <span class="x">заряда</span></h1>
+  <p class="kicker">Ролик на 30 секунд для TORNADO MAX ENERGY. Один непрерывный отлёт: банка в руке спортсмена каждый раз оказывается частью мира побольше, и буря растёт вместе с масштабом.</p>
+  <div class="hero-actions"><a class="cta" href="#s1">Сцены</a><a class="cta ghost" href="#refs">Референсы</a><a class="cta ghost" href="#how">Как снимать</a><a class="cta ghost" href="./tornado-directors-notes.pdf?v=202611181835" download="TORNADO · Director's notes.pdf">Скачать PDF</a></div>
+</section>
+
+<section class="grid">
+  <dl class="meta">
+    <div><dt>Клиент</dt><dd>TORNADO MAX ENERGY</dd></div>
+    <div><dt>Хронометраж</dt><dd>30 сек + катдаун 15 сек</dd></div>
+    <div><dt>Формат</dt><dd>Горизонталь и вертикаль</dd></div>
+    <div><dt>Режиссёр</dt><dd>Антон Шавкеро</dd></div>
+  </dl>
+  <div class="copy">
+    <p><b>Игра в масштаб.</b> Каждая сцена начинается с банки в руке спортсмена. Камера отлетает, и оказывается, что спортсмен сам плывёт, гоняет или лезет по банке ещё больше.</p>
+    <p><b>Один отлёт.</b> Камера не останавливается: из темноты к триатлону, к мото, к скале и к клетке MMA.</p>
+    <p><b>Буря растёт.</b> С каждым масштабом больше молний и сильнее ветер. <mark>На пике вспышка, всё гаснет, и остаётся одна банка с вихрем внутри.</mark></p>
+    <p>Банка и лого в кадре весь ролик, слоган в финале.</p>
+  </div>
+</section>
+
+<section class="grid">
+  <div class="label">Хронометраж</div>
+  <div><div class="time"><a href="#s1" style="flex:4 1 0"><span class="n">Заряд</span><span class="s">4</span></a><a href="#s2" style="flex:4.5 1 0"><span class="n">Внутри</span><span class="s">4,5</span></a><a href="#s3" style="flex:4.5 1 0"><span class="n">Мото</span><span class="s">4,5</span></a><a href="#s4" style="flex:3.5 1 0"><span class="n">Скала</span><span class="s">3,5</span></a><a href="#s5" style="flex:5.5 1 0"><span class="n">Клетка</span><span class="s">5,5</span></a><a href="#s6" style="flex:8 1 0"><span class="n">Вспышка</span><span class="s">8</span></a></div><div class="scale"><span>0</span><span>30 сек</span></div></div>
+</section>
+
+<section class="case" id="s1">
+  <div class="case-meta">
+    <div class="no"><span>Сцена 1</span><span>0–4 сек</span></div>
+    <h2>Заряд</h2>
+    <p class="desc"><b>Где</b>Темнота. Банка и рука.</p>
+  </div>
+  <div class="sb"><figure><a href="./media/sb/1.1.jpg?v=1" target="_blank" rel="noopener"><img src="./media/sb/1.1.jpg?v=1" alt="Кадр 1.1" loading="lazy"></a><figcaption><span>1.1 · макро · 1 с</span><span>лого в темноте</span></figcaption></figure><figure><a href="./media/sb/1.2.jpg?v=1" target="_blank" rel="noopener"><img src="./media/sb/1.2.jpg?v=1" alt="Кадр 1.2" loading="lazy"></a><figcaption><span>1.2 · макро · 1,5 с</span><span>молния по переднему плану</span></figcaption></figure><figure><a href="./media/sb/1.3.jpg?v=1" target="_blank" rel="noopener"><img src="./media/sb/1.3.jpg?v=1" alt="Кадр 1.3" loading="lazy"></a><figcaption><span>1.3 · 85 мм · 1,5 с</span><span>рука берёт банку</span></figcaption></figure></div><!--/sb-->
+  <div class="shots">
+    <div class="shot">
+      <div class="cam"><span>Сценарий</span><span>0–4 сек</span></div>
+      <p>Темнота. Из неё проступает лого TORNADO.</p><p>По переднему плану проходит молния и на миг освещает металл банки.</p><p>Из темноты появляется рука и берёт банку. Между пальцами и металлом проскакивают искры.</p>
+    </div>
+    <div class="shot ideas">
+      <div class="cam"><span>Ещё 5 идей</span><span>на выбор</span></div>
+      <ol><li>Первым идёт звук: щелчок ключа в темноте, лого проступает на вспышке от открытия.</li><li>Разряд выжигает лого на металле, как сварка: искры, дым, остывающий контур.</li><li>Капля конденсата стекает по лого, в ней отражается молния.</li><li>Лого вспыхивает в ритме пульса: удар сердца, вспышка, удар сердца.</li><li>Банку берёт рука в бинтах бойца: так с первого кадра понятно, чем всё закончится.</li></ol>
+    </div>
+  </div>
+</section>
+<section class="case" id="s2">
+  <div class="case-meta">
+    <div class="no"><span>Сцена 2</span><span>4–8,5 сек</span></div>
+    <h2>Внутри</h2>
+    <p class="desc"><b>Где</b>Внутри банки: напиток, металлический купол, молнии.</p>
+  </div>
+  <div class="sb"><figure><a href="./media/sb/2.1.jpg?v=1" target="_blank" rel="noopener"><img src="./media/sb/2.1.jpg?v=1" alt="Кадр 2.1" loading="lazy"></a><figcaption><span>2.1 · отлёт · 3 с</span><span>триатлонист в напитке</span></figcaption></figure><figure><a href="./media/sb/2.2.jpg?v=1" target="_blank" rel="noopener"><img src="./media/sb/2.2.jpg?v=1" alt="Кадр 2.2" loading="lazy"></a><figcaption><span>2.2 · probe 24 мм · 1,5 с</span><span>вылет через горлышко</span></figcaption></figure></div><!--/sb-->
+  <div class="shots">
+    <div class="shot">
+      <div class="cam"><span>Сценарий</span><span>4–8,5 сек</span></div>
+      <p>Резкий отлёт: мы внутри банки. Триатлонист с банкой в руке плывёт в напитке среди других пловцов. Вокруг бьют молнии, над ними металлический купол.</p><p>Камера вылетает через горлышко. Крупно металлический край банки, из него закручивается вихрь.</p>
+    </div>
+    <div class="shot ideas">
+      <div class="cam"><span>Ещё 5 идей</span><span>на выбор</span></div>
+      <ol><li>Каждый гребок пловца оставляет в напитке светящийся след разряда.</li><li>Вместо пловцов серферы: волна напитка внутри банки закручивается в вихрь.</li><li>Пузырьки газа размером с валуны, спортсмены отталкиваются от них.</li><li>Изнутри видим, как огромные пальцы сжимают банку: стенка мнётся, по вмятинам бегут разряды.</li><li>Вихрь сам выносит пловца через горлышко, и камера вылетает вместе с ним.</li></ol>
+    </div>
+  </div>
+</section>
+<section class="case" id="s3">
+  <div class="case-meta">
+    <div class="no"><span>Сцена 3</span><span>8,5–13 сек</span></div>
+    <h2>Мото</h2>
+    <p class="desc"><b>Где</b>Поверхность банки: металл, ободок, пальцы.</p>
+  </div>
+  <div class="sb"><figure><a href="./media/sb/3.1.jpg?v=1" target="_blank" rel="noopener"><img src="./media/sb/3.1.jpg?v=1" alt="Кадр 3.1" loading="lazy"></a><figcaption><span>3.1 · 1,5 с</span><span>мото на банке</span></figcaption></figure><figure><a href="./media/sb/3.1b.jpg?v=1" target="_blank" rel="noopener"><img src="./media/sb/3.1b.jpg?v=1" alt="Кадр 3.1b" loading="lazy"></a><figcaption><span>3.1 · вариант</span><span>мото на банке</span></figcaption></figure><figure><a href="./media/sb/3.2.jpg?v=1" target="_blank" rel="noopener"><img src="./media/sb/3.2.jpg?v=1" alt="Кадр 3.2" loading="lazy"></a><figcaption><span>3.2 · отлёт · 3 с</span><span>гоняют по банке</span></figcaption></figure></div><!--/sb-->
+  <div class="shots">
+    <div class="shot">
+      <div class="cam"><span>Сценарий</span><span>8,5–13 сек</span></div>
+      <p>По металлу банки несётся мотогонщик.</p><p>Отлёт на общий: он с друзьями гоняет по огромной банке и перепрыгивает через пальцы, которые её держат.</p>
+    </div>
+    <div class="shot ideas">
+      <div class="cam"><span>Ещё 5 идей</span><span>на выбор</span></div>
+      <ol><li>Дрифт вместо мото: следы покрышек на металле рисуют спираль вихря.</li><li>Мотоциклы едут по ободку банки, как по вертикальной стене мототрека.</li><li>Ключ банки работает как трамплин: прыжок через отверстие горлышка.</li><li>Искры от подножек по металлу превращаются в молнии.</li><li>Капли конденсата размером с машину, байки пробивают их насквозь.</li></ol>
+    </div>
+  </div>
+</section>
+<section class="case" id="s4">
+  <div class="case-meta">
+    <div class="no"><span>Сцена 4</span><span>13–16,5 сек</span></div>
+    <h2>Скала</h2>
+    <p class="desc"><b>Где</b>Банка размером со скалу. Ветер, дождь, молнии.</p>
+  </div>
+  <div class="sb"><figure><a href="./media/sb/4.1.jpg?v=1" target="_blank" rel="noopener"><img src="./media/sb/4.1.jpg?v=1" alt="Кадр 4.1" loading="lazy"></a><figcaption><span>4.1 · отлёт · 3,5 с</span><span>скалолазы на банке</span></figcaption></figure></div><!--/sb-->
+  <div class="shots">
+    <div class="shot">
+      <div class="cam"><span>Сценарий</span><span>13–16,5 сек</span></div>
+      <p>Ещё отлёт. Банка стала скалой: скалолазы поднимаются по ней сквозь ветер, дождь и молнии.</p>
+    </div>
+    <div class="shot ideas">
+      <div class="cam"><span>Ещё 5 идей</span><span>на выбор</span></div>
+      <ol><li>Ветер срывает магнезию с рук скалолаза и закручивает её в вихрь.</li><li>Скалолаз в прыжке тянется к ключу банки, как к последней зацепке.</li><li>Вершина банки открыта: из горлышка бьёт вихрь, как из вулкана.</li><li>С вершины в грозу прыгают бейсджамперы.</li><li>Руферы вместо скалолазов: банка стоит среди небоскрёбов, на ней ночной город.</li></ol>
+    </div>
+  </div>
+</section>
+<section class="case" id="s5">
+  <div class="case-meta">
+    <div class="no"><span>Сцена 5</span><span>16,5–22 сек</span></div>
+    <h2>Клетка</h2>
+    <p class="desc"><b>Где</b>Октагон на вершине банки, ночное небо, вертолёты.</p>
+  </div>
+  <div class="sb"><figure><a href="./media/sb/5.1.jpg?v=1" target="_blank" rel="noopener"><img src="./media/sb/5.1.jpg?v=1" alt="Кадр 5.1" loading="lazy"></a><figcaption><span>5.1 · 35 мм · 2,5 с</span><span>перчатка поднимает банку</span></figcaption></figure><figure><a href="./media/sb/5.2.jpg?v=1" target="_blank" rel="noopener"><img src="./media/sb/5.2.jpg?v=1" alt="Кадр 5.2" loading="lazy"></a><figcaption><span>5.2 · отлёт · 3 с</span><span>октагон на банке</span></figcaption></figure></div><!--/sb-->
+  <div class="shots">
+    <div class="shot">
+      <div class="cam"><span>Сценарий</span><span>16,5–22 сек</span></div>
+      <p>Камера продолжает отлетать: перчатка бойца MMA поднимает банку вверх, разряды расходятся во все стороны.</p><p>Супер отлёт: на вершине гигантской банки октагон, вокруг кружат вертолёты.</p>
+    </div>
+    <div class="shot ideas">
+      <div class="cam"><span>Ещё 5 идей</span><span>на выбор</span></div>
+      <ol><li>Секунда перед выходом в клетку: боец в тоннеле делает глоток, и всё, что мы видели, происходило у него внутри.</li><li>Октагон стоит прямо на крышке, клетка идёт по ободку банки.</li><li>Каждый удар в клетке отзывается молнией в небе, вертолёты ведут прожекторами бойцов.</li><li>Трибуны вокруг банки-арены поднимают фонарики телефонов, свет закручивается в вихрь.</li><li>После глотка перчатка сминает пустую банку, и на этом звуке бьёт молния.</li></ol>
+    </div>
+  </div>
+</section>
+<section class="case" id="s6">
+  <div class="case-meta">
+    <div class="no"><span>Сцена 6</span><span>22–30 сек</span></div>
+    <h2>Вспышка</h2>
+    <p class="desc"><b>Где</b>Чёрный фон, одна банка.</p>
+  </div>
+  <div class="sb"><figure><a href="./media/sb/6.1.jpg?v=1" target="_blank" rel="noopener"><img src="./media/sb/6.1.jpg?v=1" alt="Кадр 6.1" loading="lazy"></a><figcaption><span>6.1 · 0,5 с</span><span>вспышка</span></figcaption></figure><figure><a href="./media/sb/6.2.jpg?v=1" target="_blank" rel="noopener"><img src="./media/sb/6.2.jpg?v=1" alt="Кадр 6.2" loading="lazy"></a><figcaption><span>6.2 · 85 мм · 2 с</span><span>накамерный свет</span></figcaption></figure><figure><a href="./media/sb/6.3.jpg?v=1" target="_blank" rel="noopener"><img src="./media/sb/6.3.jpg?v=1" alt="Кадр 6.3" loading="lazy"></a><figcaption><span>6.3 · 1,5 с</span><span>банка на просвет</span></figcaption></figure><figure><a href="./media/sb/6.4.jpg?v=1" target="_blank" rel="noopener"><img src="./media/sb/6.4.jpg?v=1" alt="Кадр 6.4" loading="lazy"></a><figcaption><span>6.4 · пэкшот · 4 с</span><span>банка, лого, слоган</span></figcaption></figure></div><!--/sb-->
+  <div class="shots">
+    <div class="shot">
+      <div class="cam"><span>Сценарий</span><span>22–30 сек</span></div>
+      <p>Вспышка молнии. Всё гаснет.</p><p>Накамерный свет выхватывает из черноты одну банку.</p><p>Ещё вспышка: банка на просвет, внутри вихрь и молнии.</p><p>Пэкшот: банка, от неё во все стороны бьют молнии. TORNADO. Энергия заряда.</p>
+    </div>
+    <div class="shot ideas">
+      <div class="cam"><span>Ещё 5 идей</span><span>на выбор</span></div>
+      <ol><li>В темноте слышно только шипение банки, на вспышке виден вихрь внутри.</li><li>Молнии от банки складываются в форму вихря с лого.</li><li>За одну секунду камера влетает обратно сквозь все миры и останавливается на лого.</li><li>Банка стоит в луже, в отражении гроза, которую мы только что видели.</li><li>Рука забирает банку из кадра, на чёрном остаётся след разряда и слоган.</li></ol>
+    </div>
+  </div>
+</section>
+
+<section class="grid" id="refs">
+  <div class="label">Референсы</div>
+  <div class="reflist"><a href="https://vimeo.com/860968509" target="_blank" rel="noopener"><span>PlayStation · Play Closer</span><span>тот же приём, только наоборот: камера всё время отлетает</span></a><a href="https://vimeo.com/786918192" target="_blank" rel="noopener"><span>Apple Watch Ultra · Call To The Wild</span><span>масштаб и стихия</span></a><a href="https://vimeo.com/488578635" target="_blank" rel="noopener"><span>Apple AirPods Max</span><span>продукт на чёрном, свет по металлу</span></a><a href="https://vimeo.com/233486645" target="_blank" rel="noopener"><span>Pepsi · Alaska</span><span>энергия и масштаб</span></a></div>
+</section>
+
+<section class="grid" id="how">
+  <div class="label">Как снимать</div>
+  <div class="how"><div><h3>Банка и руки</h3><p>Снимаем практически: макро на чёрном, probe-объектив 24 мм для горлышка и крышки. Конденсат, бинты, перчатки, магнезия настоящие.</p></div><div><h3>Миры</h3><p>Банки-миры, купол, скала и октагон в CG. Спортсменов снимаем на синем фоне под ракурс CG-камеры.</p></div><div><h3>Отлёт</h3><p>Одна непрерывная камера в CG. Практические кадры встраиваем через моушн-контроль. Стыки прячем во вспышку молнии или в металл банки на весь кадр.</p></div><div><h3>Молнии</h3><p>Для бликов на металле и руках ставим на площадке настоящий разряд, масштабные молнии рисуем в CG. Свет холодный, бело-голубой, красный только в лого.</p></div><div><h3>Вертикаль</h3><p>Банка всегда по центру. Отлёт вертикальный: мир растёт вверх, в вертикали это читается лучше всего.</p></div><div><h3>15 секунд</h3><p>Катдаун: Заряд, Мото, Клетка, Вспышка. Отлёт тот же, без триатлона и скалы.</p></div><div><h3>Звук</h3><p>С каждым масштабом звук ниже и шире. На вспышке тишина, слышно только шипение банки. Пэкшот на раскате грома.</p></div><div><h3>Бриф</h3><p>Банка и лого в кадре весь ролик, слоган в финале, вихрь сквозной метафорой. Внизу кадра оставляем поле под дисклеймер.</p></div></div>
+</section>
+
+<footer><span>Anton Shavkero · Director's notes</span><span>TORNADO · 2026</span></footer>
+</main>
+<div id="lb"><span class="nav prev">‹</span><img alt=""><span class="nav next">›</span><span class="x">×</span></div>
+<script>(function(){const lb=document.getElementById('lb'),im=lb.querySelector('img');let list=[],k=0;
+const all=()=>[...document.querySelectorAll('section img')].filter(i=>!i.closest('#lb'));
+const src=i=>{const a=i.closest('a');return a&&/\.(jpe?g|png|webp)(\?|$)/i.test(a.getAttribute('href')||'')?a.href:(i.currentSrc||i.src)};
+const show=n=>{k=(n+list.length)%list.length;im.src=src(list[k]);};
+document.addEventListener('click',e=>{const i=e.target.closest('img');if(!i||i.closest('#lb')||!i.closest('section'))return;e.preventDefault();list=all();show(list.indexOf(i));lb.classList.add('on');document.body.style.overflow='hidden';});
+const close=()=>{lb.classList.remove('on');document.body.style.overflow='';im.removeAttribute('src');};
+lb.addEventListener('click',e=>{if(e.target.classList.contains('prev')){show(k-1);return}if(e.target.classList.contains('next')){show(k+1);return}close();});
+document.addEventListener('keydown',e=>{if(!lb.classList.contains('on'))return;if(e.key==='Escape')close();if(e.key==='ArrowRight')show(k+1);if(e.key==='ArrowLeft')show(k-1);});
+let x0=null;lb.addEventListener('touchstart',e=>{x0=e.touches[0].clientX},{passive:true});lb.addEventListener('touchend',e=>{if(x0===null)return;const d=e.changedTouches[0].clientX-x0;x0=null;if(Math.abs(d)>50){e.preventDefault();show(k+(d<0?1:-1));}});
+})();</script>
+</body></html>
