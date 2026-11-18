@@ -3,7 +3,7 @@ import re,subprocess,time,pathlib,html as H
 CH="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 d=pathlib.Path(__file__).resolve().parent.parent
 idx=d/'index.html'; out=d/'vanya-stylist-brief.pdf'
-v=time.strftime('%Y%m%d%H%M')
+v=time.strftime('%Y%m%d%H%M%S')
 s=idx.read_text(); s=re.sub(r'vanya-stylist-brief\.pdf\?v=[^"]*',f'vanya-stylist-brief.pdf?v={v}',s); idx.write_text(s)
 def sec(i): return re.search(rf'<section class="grid" id="{i}">(.*?)</section>',s,re.S).group(1)
 def rows(block):
