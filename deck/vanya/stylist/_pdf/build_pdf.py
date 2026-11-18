@@ -27,8 +27,9 @@ P.append(f'<div class="p">{top("Принципы")}<h2>Принципы</h2><div
 for i in range(0,len(look),2):
   P.append(f'<div class="p">{top("Референсы образа")}<h2>Референсы образа</h2><div class="rows">'+''.join(rowhtml(r,290) for r in look[i:i+2])+'</div></div>')
 P.append(f'<div class="p">{top("Сцены")}<h2>Сцены</h2><div class="sc">'+''.join(f'<div><img src="../../media/sb/{im}"><div><h3>{t}</h3><p>{p}</p><ul>{u}</ul></div></div>' for im,t,p,u in sc)+'</div></div>')
-P.append(f'<div class="p">{top("Волосы")}<h2>Волосы</h2><p class="lead">{lead}</p><div class="rows">'+''.join(rowhtml(r,215) for r in hr[:2])+'</div></div>')
-P.append(f'<div class="p">{top("Волосы")}<h2>Волосы по сценам</h2><div class="rows">'+rowhtml(hr[2],300)+f'</div><ul class="hl">{hl}</ul></div>')
+P.append(f'<div class="p">{top("Волосы")}<h2>Волосы</h2><p class="lead">{lead}</p><div class="rows">'+''.join(rowhtml(r,285) for r in hr[:2])+'</div></div>')
+P.append(f'<div class="p">{top("Волосы")}<h2>Волосы</h2><div class="rows">'+''.join(rowhtml(r,300) for r in hr[2:4])+'</div></div>')
+P.append(f'<div class="p">{top("Волосы")}<h2>Волосы по сценам</h2><ul class="hl">{hl}</ul></div>')
 P.append(f'<div class="p">{top("Практика")}<h2>Практика</h2><div class="cols">'+''.join(f'<div><h3>{a}</h3><p>{b}</p></div>' for a,b in pc)+'</div></div>')
 css="""@page{size:1600px 900px;margin:0}*{box-sizing:border-box}html,body{margin:0;background:#f3f1ea;color:#101010;font-family:Arial,Helvetica,sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 .p{width:1600px;height:900px;padding:44px;display:flex;flex-direction:column;page-break-after:always;overflow:hidden}
