@@ -16,9 +16,16 @@ def rows(block):
     out.append((t,n,rb))
   return out
 def imgs(fr): return re.findall(r'src="\./media/([^"]+)"',fr)
+def asp(x):
+  o=subprocess.run(['sips','-g','pixelWidth','-g','pixelHeight',str(d/'media'/x)],capture_output=True,text=True).stdout
+  w,h=[int(v) for v in re.findall(r'pixel(?:Width|Height): (\d+)',o)]; return w/h
 def gslide(sec_title,r,title):
-  t,n,f=r; ims=imgs(f); h=t or title
-  return f'<div class="p">{top(sec_title)}<div class="gh"><h2>{h}</h2><span>{n}</span></div><div class="gg" style="grid-template-columns:repeat({len(ims)},1fr)">'+''.join(f'<img src="../media/{x}">' for x in ims)+'</div></div>'
+  t,n,f=r; ims=imgs(f); h=t or title; out=''
+  k=(len(ims)+1)//2 if len(ims)>4 else len(ims)
+  for i in range(0,len(ims),k):
+    ch=ims[i:i+k]
+    out+=f'<div class="p">{top(sec_title)}<div class="gh"><h2>{h}</h2><span>{n}</span></div><div class="gf">'+''.join(f'<img src="../media/{x}" style="flex:{asp(x):.3f} 1 0">' for x in ch)+'</div></div>'
+  return out
 top=lambda r:f'<div class="top"><span>Как Ваня скажет · Бриф для стилистов</span><span>{r}</span></div>'
 meta=re.search(r'<dl class="meta">.*?</dl>',s,re.S).group(0)
 copy=re.search(r'<div class="copy">(.*?)</div>',s,re.S).group(1)
@@ -57,7 +64,7 @@ dl{margin:0;display:grid;gap:8px}dt{font-size:12px;text-transform:uppercase;lett
 .sc2{display:grid;grid-template-columns:1fr 1fr;gap:36px}.sc2 img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;margin-bottom:16px}.sc2 h3{margin:0 0 8px;font-size:34px;font-weight:500;letter-spacing:-.03em}.sc2 p{margin:0 0 12px;font-size:27px;line-height:1.35}.sc2 ul{margin:0;padding-left:24px;font-size:27px;line-height:1.4}
 .cols.pr p{font-size:38px;line-height:1.22}
 .rows{display:grid;gap:26px}.r{display:grid;grid-template-columns:230px 1fr;gap:24px}.rn{border-top:1px solid rgba(16,16,16,.18);padding-top:10px}.rn b{display:block;font-size:13px;text-transform:uppercase;letter-spacing:.06em;font-weight:400;color:#69675f;margin-bottom:8px}.rn span{font-size:16px;line-height:1.35}
-.gh{display:flex;align-items:baseline;gap:28px;margin-bottom:22px}.gh h2{margin:0}.gh span{font-size:22px;color:#69675f}.gg{display:grid;gap:12px;flex:1;min-height:0}.gg img{width:100%;height:100%;object-fit:cover;object-position:50% 20%;display:block;background:#dcd9d0}
+.gh{display:flex;align-items:baseline;gap:28px;margin-bottom:22px}.gh h2{margin:0}.gh span{font-size:22px;color:#69675f}.gf{display:flex;gap:14px;flex:1;min-height:0;align-items:center}.gf img{min-width:0;width:100%;height:auto;max-height:100%;object-fit:contain;display:block}.gg{display:grid;gap:12px;flex:1;min-height:0}.gg img{width:100%;height:100%;object-fit:cover;object-position:50% 20%;display:block;background:#dcd9d0}
 .ri{display:flex;gap:10px;overflow:hidden}.ri img{width:auto;display:block;background:#dcd9d0}
 .sc{display:grid;grid-template-columns:1fr 1fr;gap:26px 36px;flex:1}.sc>div{display:grid;grid-template-columns:520px 1fr;gap:20px}.sc img{width:520px;height:292px;object-fit:cover;display:block}
 .sc h3{margin:0 0 8px;font-size:30px;font-weight:500;letter-spacing:-.02em}.sc p{margin:0 0 10px;font-size:18px;line-height:1.35}.sc ul,.hl{margin:0;padding-left:20px;font-size:18px;line-height:1.4}
