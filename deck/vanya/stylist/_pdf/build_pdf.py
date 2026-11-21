@@ -5,33 +5,44 @@ d=pathlib.Path(__file__).resolve().parent.parent
 idx=d/'index.html'; out=d/'vanya-stylist-brief.pdf'
 v=time.strftime('%Y%m%d%H%M%S')
 s=idx.read_text(); s=re.sub(r'vanya-stylist-brief\.pdf\?v=[^"]*',f'vanya-stylist-brief.pdf?v={v}',s); idx.write_text(s)
-def sec(i): return re.search(rf'<section class="grid" id="{i}">(.*?)</section>',s,re.S).group(1)
+def sec(i):
+  m=re.search(rf'<section class="grid" id="{i}">(.*?)</section>',s,re.S); return m.group(1) if m else ''
 def rows(block):
-  return re.findall(r'<div class="light-row"><div class="light-name">(.*?)<p class="decor-note">(.*?)</p></div><div class="light-imgs">(.*?)</div></div>',block,re.S)
+  out=[]
+  for rb in re.findall(r'<div class="light-row">(.*?<div class="light-imgs">.*?)</div></div>',block,re.S):
+    nm=re.search(r'<div class="light-name">(.*?)</div>',rb,re.S); nm=nm.group(1) if nm else ''
+    t=re.sub(r'<p class="decor-note">.*?</p>','',nm,flags=re.S).strip()
+    n=re.search(r'<p class="decor-note">(.*?)</p>',nm,re.S); n=n.group(1) if n else ''
+    out.append((t,n,rb))
+  return out
 def imgs(fr): return re.findall(r'src="\./media/([^"]+)"',fr)
-def gslide(sec_title,r):
-  t,n,f=r; ims=imgs(f)
-  return f'<div class="p">{top(sec_title)}<div class="gh"><h2>{t}</h2><span>{n}</span></div><div class="gg" style="grid-template-columns:repeat({len(ims)},1fr)">'+''.join(f'<img src="../media/{x}">' for x in ims)+'</div></div>'
-def rowhtml(r,h=300):
-  t,n,f=r; return f'<div class="r"><div class="rn"><b>{t}</b><span>{n}</span></div><div class="ri">'+''.join(f'<img src="../media/{x}" style="height:{h}px">' for x in imgs(f))+'</div></div>'
+def gslide(sec_title,r,title):
+  t,n,f=r; ims=imgs(f); h=t or title
+  return f'<div class="p">{top(sec_title)}<div class="gh"><h2>{h}</h2><span>{n}</span></div><div class="gg" style="grid-template-columns:repeat({len(ims)},1fr)">'+''.join(f'<img src="../media/{x}">' for x in ims)+'</div></div>'
 top=lambda r:f'<div class="top"><span>Как Ваня скажет · Бриф для стилистов</span><span>{r}</span></div>'
 meta=re.search(r'<dl class="meta">.*?</dl>',s,re.S).group(0)
 copy=re.search(r'<div class="copy">(.*?)</div>',s,re.S).group(1)
 kicker=re.search(r'<p class="kicker">(.*?)</p>',s,re.S).group(1)
 pr=re.findall(r'<div><h3>(.*?)</h3><p>(.*?)</p></div>',sec('principles'))
 look=rows(sec('look')); hair=sec('hair'); hr=rows(hair)
-lead=re.search(r'<p class="decor-lead">(.*?)</p>',hair,re.S).group(1)
-hl=re.search(r'<ul class="st-list"[^>]*>(.*?)</ul>',hair,re.S).group(1)
-sc=re.findall(r'<div class="st-scene"><figure><img src="\.\./media/sb/([^"]+)"[^>]*></figure><div><h3>(.*?)</h3><p>(.*?)</p><ul>(.*?)</ul></div></div>',sec('scenes'))
+lead=re.search(r'<p class="decor-lead">(.*?)</p>',hair,re.S); lead=lead.group(1) if lead else ''
+hl=re.search(r'<ul class="st-list"[^>]*>(.*?)</ul>',hair,re.S); hl=hl.group(1) if hl else ''
+sc=[]
+for b in re.findall(r'<div class="st-scene">(.*?)</div></div>',sec('scenes'),re.S):
+  im=re.search(r'src="\.\./media/sb/([^"]+)"',b).group(1)
+  h=re.search(r'<h3>(.*?)</h3>',b,re.S).group(1)
+  pp=''.join(f'<p>{x}</p>' for x in re.findall(r'<p>(.*?)</p>',b,re.S))
+  u=re.search(r'<ul>(.*?)</ul>',b,re.S); u=f'<ul>{u.group(1)}</ul>' if u else ''
+  sc.append((im,h,pp,u))
 pc=re.findall(r'<div><h3>(.*?)</h3><p>(.*?)</p></div>',sec('practice'))
 P=[]
 P.append(f'<div class="p">{top("ГигаЧат, 2026")}<h1>Ваня. <span>Образ</span></h1><p class="k">{kicker}</p><div class="two"><div class="meta">{meta}</div><div class="cp">{copy}</div></div></div>')
-P.append(f'<div class="p">{top("Принципы")}<h2>Принципы</h2><div class="cols">'+''.join(f'<div><h3>{a}</h3><p>{b}</p></div>' for a,b in pr)+'</div></div>')
-for r in look: P.append(gslide('Референсы образа',r))
+if pr: P.append(f'<div class="p">{top("Принципы")}<h2>Принципы</h2><div class="cols">'+''.join(f'<div><h3>{a}</h3><p>{b}</p></div>' for a,b in pr)+'</div></div>')
+for r in look: P.append(gslide('Референсы образа',r,'Образ'))
 for a in range(0,len(sc),2):
-  P.append(f'<div class="p">{top("Сцены")}<h2>Сцены</h2><div class="sc2">'+''.join(f'<div><img src="../../media/sb/{im}"><h3>{t}</h3><p>{p}</p><ul>{u}</ul></div>' for im,t,p,u in sc[a:a+2])+'</div></div>')
-P.append(f'<div class="p">{top("Волосы")}<h2>Волосы</h2><p class="lead big">{lead}</p><ul class="hl">{hl}</ul></div>')
-for r in hr: P.append(gslide('Волосы',r))
+  P.append(f'<div class="p">{top("Сцены")}<h2>Сцены</h2><div class="sc2">'+''.join(f'<div><img src="../../media/sb/{im}"><h3>{h}</h3>{pp}{u}</div>' for im,h,pp,u in sc[a:a+2])+'</div></div>')
+if lead or hl: P.append(f'<div class="p">{top("Волосы")}<h2>Волосы</h2><p class="lead big">{lead}</p><ul class="hl">{hl}</ul></div>')
+for r in hr: P.append(gslide('Волосы',r,'Волосы'))
 P.append(f'<div class="p">{top("Практика")}<h2>Практика</h2><div class="cols pr">'+''.join(f'<div><h3>{a}</h3><p>{b}</p></div>' for a,b in pc)+'</div></div>')
 css="""@page{size:1600px 900px;margin:0}*{box-sizing:border-box}html,body{margin:0;background:#f3f1ea;color:#101010;font-family:Arial,Helvetica,sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 .p{width:1600px;height:900px;padding:44px;display:flex;flex-direction:column;page-break-after:always;overflow:hidden}
